@@ -8,7 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-green.svg)](https://chrome.google.com/webstore)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/your-username/text2social)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://github.com/your-username/text2social)
 
 </div>
 
@@ -113,7 +113,7 @@ text2social/
 
 ## 📝 更新日志
 
-### v1.0.0 (开发中)
+### v1.2.0 (已发布)
 - ✅ 基础插件架构
 - ✅ 文字选择监听
 - ✅ 图片生成功能
