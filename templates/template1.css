@@ -90,6 +90,76 @@ body {
   position: relative;
 }
 
+/* 支持HTML结构标签的样式 */
+.text-content div {
+  margin: 20px 0;
+}
+
+.text-content p {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.text-content ul, .text-content ol {
+  margin: 20px 0;
+  text-align: left;
+  display: inline-block;
+}
+
+.text-content li {
+  margin: 10px 0;
+  list-style-position: inside;
+}
+
+.text-content table {
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+.text-content td, .text-content th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.text-content blockquote {
+  margin: 20px 0;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.05);
+  border-left: 4px solid #667eea;
+  font-style: italic;
+}
+
+.text-content h1, .text-content h2, .text-content h3,
+.text-content h4, .text-content h5, .text-content h6 {
+  margin: 30px 0 20px 0;
+  font-weight: bold;
+}
+
+.text-content h1 { font-size: 60px; }
+.text-content h2 { font-size: 56px; }
+.text-content h3 { font-size: 52px; }
+.text-content h4 { font-size: 50px; }
+.text-content h5 { font-size: 48px; }
+.text-content h6 { font-size: 46px; }
+
+.text-content pre {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  border-radius: 8px;
+  text-align: left;
+  font-family: monospace;
+  font-size: 36px;
+  overflow: auto;
+}
+
+.text-content hr {
+  border: none;
+  height: 2px;
+  background: #ddd;
+  margin: 30px 0;
+}
+
 .text-content::before,
 .text-content::after {
   content: '"';

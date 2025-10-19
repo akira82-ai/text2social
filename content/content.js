@@ -253,7 +253,21 @@
       console.log('📏 Text length:', text.length);
 
       if (text && text.length > 0) {
-        selectedText = text;
+        // 获取选中范围的HTML内容，保留结构
+        let selectedHtml = '';
+        try {
+          const range = selection.getRangeAt(0);
+          const container = document.createElement('div');
+          container.appendChild(range.cloneContents());
+          selectedHtml = container.innerHTML;
+          console.log('🔤 Selected HTML:', selectedHtml);
+        } catch (error) {
+          console.warn('⚠️ Could not get HTML content, using plain text:', error);
+          selectedHtml = text;
+        }
+
+        // 保存HTML内容而不是纯文本，这样我们可以在处理时保留换行结构
+        selectedText = selectedHtml;
 
         // 获取选中文本的准确位置
         const range = selection.getRangeAt(0);
@@ -348,6 +362,92 @@
     }
     buttonVisible = false;
     console.log('🙈 Button hidden');
+  }
+
+  // HTML内容清理函数 - 保留结构但移除样式
+  function cleanHtmlContent(html) {
+    if (!html) return '';
+
+    console.log('🧹 Original HTML:', html);
+
+    let cleaned = html;
+
+    // 1. 移除样式相关标签，但保留内容
+    const styleTags = [
+      /<strong[^>]*>(.*?)<\/strong>/gi,
+      /<b[^>]*>(.*?)<\/b>/gi,
+      /<em[^>]*>(.*?)<\/em>/gi,
+      /<i[^>]*>(.*?)<\/i>/gi,
+      /<u[^>]*>(.*?)<\/u>/gi,
+      /<s[^>]*>(.*?)<\/s>/gi,
+      /<del[^>]*>(.*?)<\/del>/gi,
+      /<ins[^>]*>(.*?)<\/ins>/gi,
+      /<small[^>]*>(.*?)<\/small>/gi,
+      /<big[^>]*>(.*?)<\/big>/gi,
+      /<sub[^>]*>(.*?)<\/sub>/gi,
+      /<sup[^>]*>(.*?)<\/sup>/gi,
+      /<code[^>]*>(.*?)<\/code>/gi,
+      /<kbd[^>]*>(.*?)<\/kbd>/gi,
+      /<samp[^>]*>(.*?)<\/samp>/gi,
+      /<var[^>]*>(.*?)<\/var>/gi,
+      /<mark[^>]*>(.*?)<\/mark>/gi,
+      /<abbr[^>]*>(.*?)<\/abbr>/gi,
+      /<cite[^>]*>(.*?)<\/cite>/gi,
+      /<dfn[^>]*>(.*?)<\/dfn>/gi,
+      /<q[^>]*>(.*?)<\/q>/gi,
+      /<time[^>]*>(.*?)<\/time>/gi,
+      /<span[^>]*>(.*?)<\/span>/gi,
+      /<font[^>]*>(.*?)<\/font>/gi
+    ];
+
+    styleTags.forEach(regex => {
+      cleaned = cleaned.replace(regex, '$1');
+    });
+
+    // 2. 移除自闭合样式标签
+    const selfClosingStyleTags = [
+      /<br[^>]*>/gi,
+      /<hr[^>]*>/gi
+    ];
+
+    // 保留br但移除属性
+    cleaned = cleaned.replace(/<br[^>]*>/gi, '<br>');
+    // 保留hr但移除属性
+    cleaned = cleaned.replace(/<hr[^>]*>/gi, '<hr>');
+
+    // 3. 移除所有HTML属性（除了结构标签）
+    const allowedTags = ['html', 'head', 'body', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+                        'ul', 'ol', 'li', 'dl', 'dt', 'dd', 'table', 'tr', 'td', 'th', 'thead', 'tbody', 'tfoot',
+                        'section', 'article', 'header', 'footer', 'nav', 'aside', 'main', 'figure', 'figcaption',
+                        'br', 'hr', 'blockquote', 'pre', 'address'];
+
+    // 移除所有标签的属性
+    cleaned = cleaned.replace(/<([a-zA-Z0-9]+)([^>]*)>/gi, function(match, tagName, attributes) {
+      // 对于所有标签，都移除属性
+      return '<' + tagName.toLowerCase() + '>';
+    });
+
+    // 4. 处理HTML实体
+    cleaned = cleaned.replace(/&nbsp;/g, ' ')
+                     .replace(/&amp;/g, '&')
+                     .replace(/&lt;/g, '<')
+                     .replace(/&gt;/g, '>')
+                     .replace(/&quot;/g, '"')
+                     .replace(/&#39;/g, "'")
+                     .replace(/&apos;/g, "'")
+                     .replace(/&\d+;/g, '') // 移除其他数字实体
+                     .replace(/&[a-zA-Z]+;/g, ''); // 移除其他命名实体
+
+    // 5. 清理多余的空白字符
+    cleaned = cleaned.replace(/\s+/g, ' ') // 多个空白字符合并为一个
+                     .replace(/>\s+</g, '><') // 移除标签间的空白
+                     .replace(/^\s+|\s+$/g, ''); // 移除首尾空白
+
+    // 6. 确保标签是正确的格式
+    cleaned = cleaned.replace(/<([a-zA-Z0-9]+)>/g, '<$1>'); // 标签名小写
+
+    console.log('✨ Cleaned HTML:', cleaned);
+    return cleaned;
   }
 
   // 获取网页信息
@@ -455,7 +555,7 @@
           // 替换模板变量 - 只保留三种核心元素
           let processedHtml = htmlContent
             .replace(/{{title}}/g, pageInfo.title || '未知标题')
-            .replace(/{{text}}/g, pageInfo.selectedText || '无内容')
+            .replace(/{{text}}/g, cleanHtmlContent(pageInfo.selectedText) || '无内容')
             // 替换二维码占位符为实际的二维码图片
             .replace('<div class="qr-placeholder">QR</div>',
                      `<img src="${qrCodeDataUrl}" style="width:80px;height:80px;" alt="QR Code">`);
@@ -591,29 +691,54 @@
     ctx.font = '48px "PingFang SC", "Microsoft YaHei", sans-serif';
     ctx.textAlign = 'center';
 
-    // 处理长文本换行
+    // 使用HTML清理函数，然后转换为纯文本
+    const cleanHtml = cleanHtmlContent(pageInfo.selectedText);
+    const cleanText = cleanHtml.replace(/<[^>]*>/g, ''); // 移除HTML标签得到纯文本
+
+    // 处理长文本换行，支持换行符
     const maxWidth = 800;
     const lineHeight = 70;
-    const words = pageInfo.selectedText.split('');
-    let line = '';
+    const lines = cleanText.split('\n'); // 先按换行符分割
     let y = 300;
 
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n];
-      const metrics = ctx.measureText(testLine);
-      const testWidth = metrics.width;
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+      const lineText = lines[lineIndex].trim();
+      if (!lineText) continue;
 
-      if (testWidth > maxWidth && n > 0) {
-        ctx.fillText(line, canvas.width / 2, y);
-        line = words[n];
-        y += lineHeight;
+      // 如果单行文本太长，需要自动换行
+      if (ctx.measureText(lineText).width > maxWidth) {
+        // 单行文本过长，需要按字符换行
+        const words = lineText.split('');
+        let currentLine = '';
 
-        if (y > 700) break;
+        for (let n = 0; n < words.length; n++) {
+          const testLine = currentLine + words[n];
+          const metrics = ctx.measureText(testLine);
+          const testWidth = metrics.width;
+
+          if (testWidth > maxWidth && n > 0) {
+            ctx.fillText(currentLine, canvas.width / 2, y);
+            currentLine = words[n];
+            y += lineHeight;
+
+            if (y > 700) break;
+          } else {
+            currentLine = testLine;
+          }
+        }
+
+        if (currentLine && y <= 700) {
+          ctx.fillText(currentLine, canvas.width / 2, y);
+          y += lineHeight;
+        }
       } else {
-        line = testLine;
+        // 单行文本长度合适，直接绘制
+        ctx.fillText(lineText, canvas.width / 2, y);
+        y += lineHeight;
       }
+
+      if (y > 700) break;
     }
-    ctx.fillText(line, canvas.width / 2, y);
 
     // 网页标题
     ctx.fillStyle = '#666';
