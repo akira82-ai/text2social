@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>text2social</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>text2social</h1>
+      <p class="subtitle">文字转社交图片</p>
+    </div>
+
+    <div class="content">
+      <div class="instructions">
+        <h3>使用方法：</h3>
+        <ol>
+          <li>在网页上选中任意文字</li>
+          <li>点击出现的📸按钮</li>
+          <li>预览生成的图片</li>
+          <li>下载或复制图片</li>
+        </ol>
+      </div>
+
+      <div class="stats">
+        <p>已生成 <span id="generated-count">0</span> 张图片</p>
+      </div>
+
+      <div class="shortcuts">
+        <h3>快捷操作：</h3>
+        <button id="reset-settings" class="secondary-btn">重置设置</button>
+        <button id="feedback" class="secondary-btn">意见反馈</button>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>v1.0.0</p>
+      <p>© 2024 text2social</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

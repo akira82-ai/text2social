@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>调试模板 - text2social</title>
+  <style>
+    /* 调试模板样式 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .debug-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* 调试面板样式 */
+    .debug-panel, .debug-controls, .test-data {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .debug-panel h3, .debug-controls h3, .test-data h3 {
+      color: #333;
+      margin-bottom: 15px;
+      font-size: 18px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 8px;
+    }
+
+    .debug-info {
+      display: grid;
+      gap: 10px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      background: #f8f9fa;
+      border-radius: 6px;
+    }
+
+    .info-item .label {
+      font-weight: bold;
+      color: #666;
+      min-width: 80px;
+    }
+
+    .info-item .value {
+      color: #333;
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .info-item img {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+
+    /* 分享图片区域 */
+    .share-image {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 600px;
+    }
+
+    .template-container {
+      width: 540px;
+      height: 540px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      padding: 30px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 背景装饰 */
+    .template-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      50% { transform: translate(-20px, -20px) rotate(180deg); }
+    }
+
+    /* 头部 */
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      z-index: 1;
+    }
+
+    .favicon {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      margin-right: 10px;
+      background: white;
+      padding: 2px;
+    }
+
+    .title {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      opacity: 0.9;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 内容 */
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .text-content {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'ZCOOL KuaiLe', cursive, 'PingFang SC';
+      font-size: 24px;
+      line-height: 1.6;
+      color: #333;
+      text-align: center;
+      max-width: 90%;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+
+    .text-content::before,
+    .text-content::after {
+      content: '"';
+      position: absolute;
+      font-size: 40px;
+      color: #667eea;
+      opacity: 0.3;
+    }
+
+    .text-content::before {
+      top: 5px;
+      left: 10px;
+    }
+
+    .text-content::after {
+      bottom: 0;
+      right: 10px;
+    }
+
+    /* 底部 */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1;
+    }
+
+    .qr-code {
+      width: 60px;
+      height: 60px;
+      background: white;
+      border-radius: 6px;
+      padding: 5px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .qr-placeholder {
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      color: #999;
+      background: #f8f9fa;
+      border-radius: 2px;
+    }
+
+    .qr-error {
+      color: #ff4444;
+      font-size: 8px;
+      text-align: center;
+    }
+
+    .url-text {
+      color: white;
+      font-size: 12px;
+      opacity: 0.8;
+      text-align: right;
+      max-width: 200px;
+      word-break: break-all;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* 调试控制按钮 */
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .debug-btn {
+      padding: 10px 15px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .debug-btn:hover {
+      background: #5a6fd8;
+      transform: translateY(-1px);
+    }
+
+    .debug-btn.primary {
+      background: #28a745;
+      grid-column: span 2;
+    }
+
+    .debug-btn.primary:hover {
+      background: #218838;
+    }
+
+    /* 字体选择器 */
+    .font-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .font-selector label {
+      font-weight: bold;
+      color: #666;
+    }
+
+    .font-selector select {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* 测试数据区域 */
+    .test-controls {
+      display: grid;
+      gap: 10px;
+    }
+
+    .test-controls textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      resize: vertical;
+      min-height: 80px;
+      font-family: inherit;
+    }
+
+    .test-controls input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .debug-container {
+        grid-template-columns: 1fr;
+      }
+
+      .template-container {
+        width: 100%;
+        max-width: 400px;
+        height: 400px;
+        padding: 20px;
+      }
+
+      .text-content {
+        font-size: 18px;
+        padding: 15px;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+      }
+
+      .debug-btn.primary {
+        grid-column: span 1;
+      }
+    }
+
+    /* 调试状态指示 */
+    .debug-status {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #28a745;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+
+    /* 错误状态 */
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #f5c6cb;
+      margin-top: 10px;
+    }
+
+    /* 成功状态 */
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #c3e6cb;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="debug-container">
+    <!-- 调试信息面板 -->
+    <div class="debug-panel">
+      <h3>🔍 调试信息</h3>
+      <div class="debug-info">
+        <div class="info-item">
+          <span class="label">选中文字:</span>
+          <span class="value" id="debug-text">{{text}}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">网页标题:</span>
+          <span class="value" id="debug-title">{{title}}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">网页URL:</span>
+          <span class="value" id="debug-url">{{url}}</span>
+        </div>
+        <div class="info-item">
+          <span class="label">网站图标:</span>
+          <img id="debug-favicon" src="{{favicon}}" alt="favicon" onerror="this.style.display='none'">
+        </div>
+        <div class="info-item">
+          <span class="label">生成时间:</span>
+          <span class="value" id="debug-time">{{timestamp}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 实际的分享图片区域 -->
+    <div class="share-image" id="share-image">
+      <div class="template-container">
+        <!-- 头部区域 -->
+        <div class="header">
+          <img class="favicon" src="{{favicon}}" alt="网站图标" onerror="this.style.display='none'">
+          <div class="title">{{title}}</div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="content">
+          <div class="text-content" id="main-text">{{text}}</div>
+        </div>
+
+        <!-- 底部区域 -->
+        <div class="footer">
+          <div class="qr-code">
+            <div class="qr-placeholder" id="qr-container">
+              <div class="qr-text">二维码</div>
+            </div>
+          </div>
+          <div class="url-text" id="url-display">{{url}}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 调试控制面板 -->
+    <div class="debug-controls">
+      <h3>🎮 调试控制</h3>
+      <div class="controls">
+        <button id="toggle-debug" class="debug-btn">切换调试面板</button>
+        <button id="regenerate-qr" class="debug-btn">重新生成二维码</button>
+        <button id="change-font" class="debug-btn">切换字体</button>
+        <button id="export-image" class="debug-btn primary">导出图片</button>
+      </div>
+
+      <!-- 字体选择 -->
+      <div class="font-selector">
+        <label>选择字体:</label>
+        <select id="font-select">
+          <option value="'ZCOOL KuaiLe', cursive">站酷快乐体</option>
+          <option value="'ZCOOL XiaoWei', serif">站酷文艺体</option>
+          <option value="'Ma Shan Zheng', cursive">马善政楷体</option>
+          <option value="'PingFang SC', sans-serif">系统字体</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 测试数据面板 -->
+    <div class="test-data">
+      <h3>📝 测试数据</h3>
+      <div class="test-controls">
+        <textarea id="test-text" placeholder="输入测试文字...">
+生活就像一盒巧克力，你永远不知道下一颗是什么味道。保持好奇，保持热爱，每一天都是新的开始。
+        </textarea>
+        <input type="text" id="test-title" placeholder="输入测试标题..." value="测试网页标题">
+        <input type="url" id="test-url" placeholder="输入测试URL..." value="https://example.com">
+        <button id="apply-test-data" class="debug-btn">应用测试数据</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 引入第三方库 -->
+  <script src="../../assets/libs/qrcode.min.js"></script>
+  <script src="../../assets/libs/html2canvas.min.js"></script>
+
+  <script>
+    /**
+     * 调试模板脚本
+     */
+    class DebugTemplate {
+      constructor() {
+        this.currentFont = "'ZCOOL KuaiLe', cursive";
+        this.debugVisible = true;
+        this.init();
+      }
+
+      init() {
+        this.bindEvents();
+        this.generateQRCode();
+        this.updateTimestamp();
+        this.loadTestData();
+      }
+
+      bindEvents() {
+        // 切换调试面板
+        document.getElementById('toggle-debug').addEventListener('click', () => {
+          this.toggleDebugPanel();
+        });
+
+        // 重新生成二维码
+        document.getElementById('regenerate-qr').addEventListener('click', () => {
+          this.generateQRCode();
+        });
+
+        // 切换字体
+        document.getElementById('change-font').addEventListener('click', () => {
+          this.changeFont();
+        });
+
+        // 字体选择
+        document.getElementById('font-select').addEventListener('change', (e) => {
+          this.applyFont(e.target.value);
+        });
+
+        // 导出图片
+        document.getElementById('export-image').addEventListener('click', () => {
+          this.exportImage();
+        });
+
+        // 应用测试数据
+        document.getElementById('apply-test-data').addEventListener('click', () => {
+          this.applyTestData();
+        });
+
+        // 实时更新测试数据
+        document.getElementById('test-text').addEventListener('input', (e) => {
+          this.updateText(e.target.value);
+        });
+      }
+
+      toggleDebugPanel() {
+        const debugPanels = document.querySelectorAll('.debug-panel, .debug-controls, .test-data');
+        this.debugVisible = !this.debugVisible;
+
+        debugPanels.forEach(panel => {
+          panel.style.display = this.debugVisible ? 'block' : 'none';
+        });
+      }
+
+      generateQRCode() {
+        const urlElement = document.getElementById('debug-url');
+        const url = urlElement.textContent || urlElement.value || 'https://example.com';
+        const qrContainer = document.getElementById('qr-container');
+
+        // 清空现有内容
+        qrContainer.innerHTML = '';
+
+        try {
+          new QRCode(qrContainer, {
+            text: url,
+            width: 80,
+            height: 80,
+            colorDark: '#000000',
+            colorLight: '#ffffff'
+          });
+          console.log('✅ 二维码生成成功:', url);
+        } catch (error) {
+          console.error('❌ 二维码生成失败:', error);
+          qrContainer.innerHTML = '<div class="qr-error">生成失败</div>';
+        }
+      }
+
+      changeFont() {
+        const fonts = [
+          "'ZCOOL KuaiLe', cursive",
+          "'ZCOOL XiaoWei', serif",
+          "'Ma Shan Zheng', cursive",
+          "'PingFang SC', sans-serif"
+        ];
+
+        const currentIndex = fonts.indexOf(this.currentFont);
+        const nextIndex = (currentIndex + 1) % fonts.length;
+        this.currentFont = fonts[nextIndex];
+
+        this.applyFont(this.currentFont);
+      }
+
+      applyFont(fontFamily) {
+        const textElement = document.getElementById('main-text');
+        textElement.style.fontFamily = fontFamily;
+        this.currentFont = fontFamily;
+        console.log('🎨 字体已切换为:', fontFamily);
+      }
+
+      async exportImage() {
+        const shareImage = document.getElementById('share-image');
+
+        try {
+          console.log('📸 开始生成图片...');
+
+          // 临时隐藏调试面板
+          const debugElements = document.querySelectorAll('.debug-panel, .debug-controls, .test-data');
+          debugElements.forEach(el => el.style.display = 'none');
+
+          const canvas = await html2canvas(shareImage, {
+            width: 1080,
+            height: 1080,
+            scale: 1,
+            useCORS: true,
+            backgroundColor: null
+          });
+
+          // 恢复调试面板显示
+          debugElements.forEach(el => el.style.display = this.debugVisible ? 'block' : 'none');
+
+          // 下载图片
+          const link = document.createElement('a');
+          link.download = `text2social-debug-${Date.now()}.png`;
+          link.href = canvas.toDataURL();
+          link.click();
+
+          console.log('✅ 图片导出成功!');
+
+        } catch (error) {
+          console.error('❌ 图片导出失败:', error);
+          alert('图片导出失败: ' + error.message);
+        }
+      }
+
+      applyTestData() {
+        const text = document.getElementById('test-text').value;
+        const title = document.getElementById('test-title').value;
+        const url = document.getElementById('test-url').value;
+
+        this.updateText(text);
+        this.updateTitle(title);
+        this.updateUrl(url);
+        this.generateQRCode();
+
+        console.log('📝 测试数据已应用');
+      }
+
+      updateText(text) {
+        document.getElementById('main-text').textContent = text;
+        document.getElementById('debug-text').textContent = text;
+      }
+
+      updateTitle(title) {
+        document.getElementById('debug-title').textContent = title;
+        const titleElements = document.querySelectorAll('.title');
+        titleElements.forEach(el => el.textContent = title);
+      }
+
+      updateUrl(url) {
+        document.getElementById('debug-url').textContent = url;
+        document.getElementById('url-display').textContent = url;
+      }
+
+      updateTimestamp() {
+        const now = new Date().toLocaleString('zh-CN');
+        document.getElementById('debug-time').textContent = now;
+      }
+
+      loadTestData() {
+        // 自动加载一些测试数据
+        const testTexts = [
+          "生活就像一盒巧克力，你永远不知道下一颗是什么味道。保持好奇，保持热爱，每一天都是新的开始。",
+          "成功的路上并不拥挤，因为坚持的人不多。愿我们都能成为那个坚持到底的人。",
+          "不要让昨天的失败影响今天的心情，每一个新的开始都是一次机会。"
+        ];
+
+        const randomText = testTexts[Math.floor(Math.random() * testTexts.length)];
+        document.getElementById('test-text').value = randomText;
+        this.applyTestData();
+      }
+    }
+
+    // 页面加载完成后初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔧 调试模板已加载');
+      new DebugTemplate();
+    });
+
+    // 模拟插件环境的数据注入
+    function injectData(data) {
+      if (data.text) document.getElementById('test-text').value = data.text;
+      if (data.title) document.getElementById('test-title').value = data.title;
+      if (data.url) document.getElementById('test-url').value = data.url;
+
+      const debugTemplate = new DebugTemplate();
+      debugTemplate.applyTestData();
+    }
+
+    // 导出到全局，供外部调用
+    window.injectData = injectData;
+  </script>
+</body>
+</html>

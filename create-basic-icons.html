@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>创建基本图标</title>
+</head>
+<body>
+    <canvas id="canvas16" width="16" height="16"></canvas>
+    <canvas id="canvas32" width="32" height="32"></canvas>
+    <canvas id="canvas48" width="48" height="48"></canvas>
+    <canvas id="canvas128" width="128" height="128"></canvas>
+
+    <button onclick="downloadAll()">下载所有图标</button>
+
+    <script>
+        function createIcon(size, canvasId) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+
+            // 清空画布
+            ctx.clearRect(0, 0, size, size);
+
+            // 绘制渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // 绘制相机图标（简化的）
+            ctx.fillStyle = 'white';
+            ctx.fillRect(size*0.25, size*0.35, size*0.5, size*0.3);
+            ctx.beginPath();
+            ctx.arc(size*0.5, size*0.5, size*0.15, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 镜头中心
+            ctx.fillStyle = '#667eea';
+            ctx.beginPath();
+            ctx.arc(size*0.5, size*0.5, size*0.08, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById('canvas' + size);
+            const link = document.createElement('a');
+            link.download = `icon${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function downloadAll() {
+            [16, 32, 48, 128].forEach(size => {
+                setTimeout(() => downloadIcon(size), 100 * (size / 16));
+            });
+        }
+
+        // 生成所有图标
+        [16, 32, 48, 128].forEach(size => {
+            createIcon(size, 'canvas' + size);
+        });
+
+        // 自动下载
+        setTimeout(downloadAll, 1000);
+    </script>
+</body>
+</html>

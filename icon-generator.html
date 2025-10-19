@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>text2social 图标生成器</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #666;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 30px;
+    }
+
+    .preview-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-section h2 {
+      margin-bottom: 20px;
+      color: #333;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 8px;
+    }
+
+    .icon-preview {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .icon-item {
+      text-align: center;
+    }
+
+    .icon-item canvas {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-item label {
+      display: block;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .controls-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .controls-section h2 {
+      margin-bottom: 20px;
+      color: #333;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 8px;
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    .control-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .control-group input,
+    .control-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .color-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .color-input-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .color-input-group input[type="color"] {
+      width: 50px;
+      height: 40px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .color-input-group input[type="text"] {
+      flex: 1;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: #667eea;
+      color: white;
+      grid-column: span 2;
+    }
+
+    .btn-primary:hover {
+      background: #5a6fd8;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    .download-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .download-section h2 {
+      margin-bottom: 20px;
+      color: #333;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 8px;
+    }
+
+    .download-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    .download-item {
+      text-align: center;
+    }
+
+    .download-item button {
+      width: 100%;
+      padding: 10px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .download-item button:hover {
+      background: #5a6fd8;
+      transform: translateY(-1px);
+    }
+
+    .download-item button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .instructions {
+      background: #e7f3ff;
+      border: 1px solid #b3d9ff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+
+    .instructions h3 {
+      color: #0066cc;
+      margin-bottom: 10px;
+    }
+
+    .instructions ol {
+      margin-left: 20px;
+      color: #333;
+    }
+
+    .instructions li {
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .icon-preview {
+        grid-template-columns: 1fr;
+      }
+
+      .download-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎨 text2social 图标生成器</h1>
+    <p>生成Chrome插件所需的各种尺寸图标</p>
+  </div>
+
+  <div class="container">
+    <div class="preview-section">
+      <h2>图标预览</h2>
+      <div class="icon-preview">
+        <div class="icon-item">
+          <label>16x16</label>
+          <canvas id="icon-16" width="16" height="16"></canvas>
+        </div>
+        <div class="icon-item">
+          <label>32x32</label>
+          <canvas id="icon-32" width="32" height="32"></canvas>
+        </div>
+        <div class="icon-item">
+          <label>48x48</label>
+          <canvas id="icon-48" width="48" height="48"></canvas>
+        </div>
+        <div class="icon-item">
+          <label>128x128</label>
+          <canvas id="icon-128" width="128" height="128"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-section">
+      <h2>图标设置</h2>
+
+      <div class="control-group">
+        <label>图标样式</label>
+        <select id="icon-style">
+          <option value="camera">📸 相机样式</option>
+          <option value="text">📝 文字样式</option>
+          <option value="image">🖼️ 图片样式</option>
+          <option value="gradient">🌈 渐变样式</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label>主色调</label>
+        <div class="color-inputs">
+          <div class="color-input-group">
+            <input type="color" id="primary-color" value="#667eea">
+            <input type="text" id="primary-color-text" value="#667eea">
+          </div>
+          <div class="color-input-group">
+            <input type="color" id="secondary-color" value="#764ba2">
+            <input type="text" id="secondary-color-text" value="#764ba2">
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>图标文字（可选）</label>
+        <input type="text" id="icon-text" placeholder="例如：T2S" maxlength="3">
+      </div>
+
+      <div class="button-group">
+        <button class="btn btn-primary" onclick="generateIcons()">生成图标</button>
+        <button class="btn btn-secondary" onclick="resetSettings()">重置设置</button>
+        <button class="btn btn-success" onclick="randomColors()">随机配色</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="download-section">
+    <h2>下载图标</h2>
+    <div class="download-grid">
+      <div class="download-item">
+        <button id="download-16" onclick="downloadIcon(16)" disabled>下载 16x16</button>
+      </div>
+      <div class="download-item">
+        <button id="download-32" onclick="downloadIcon(32)" disabled>下载 32x32</button>
+      </div>
+      <div class="download-item">
+        <button id="download-48" onclick="downloadIcon(48)" disabled>下载 48x48</button>
+      </div>
+      <div class="download-item">
+        <button id="download-128" onclick="downloadIcon(128)" disabled>下载 128x128</button>
+      </div>
+    </div>
+
+    <div class="instructions">
+      <h3>📋 使用说明</h3>
+      <ol>
+        <li>选择图标样式和配色方案</li>
+        <li>点击"生成图标"按钮预览效果</li>
+        <li>点击相应的下载按钮保存图标</li>
+        <li>将下载的PNG文件保存到 <code>assets/icons/</code> 目录</li>
+        <li>文件名格式：<code>icon16.png</code>, <code>icon32.png</code>, <code>icon48.png</code>, <code>icon128.png</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    let generatedIcons = {};
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      setupColorSync();
+      generateIcons();
+    });
+
+    // 设置颜色同步
+    function setupColorSync() {
+      const primaryColor = document.getElementById('primary-color');
+      const primaryText = document.getElementById('primary-color-text');
+      const secondaryColor = document.getElementById('secondary-color');
+      const secondaryText = document.getElementById('secondary-color-text');
+
+      primaryColor.addEventListener('input', (e) => {
+        primaryText.value = e.target.value;
+      });
+
+      primaryText.addEventListener('input', (e) => {
+        if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+          primaryColor.value = e.target.value;
+        }
+      });
+
+      secondaryColor.addEventListener('input', (e) => {
+        secondaryText.value = e.target.value;
+      });
+
+      secondaryText.addEventListener('input', (e) => {
+        if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+          secondaryColor.value = e.target.value;
+        }
+      });
+    }
+
+    // 生成图标
+    function generateIcons() {
+      const style = document.getElementById('icon-style').value;
+      const primaryColor = document.getElementById('primary-color').value;
+      const secondaryColor = document.getElementById('secondary-color').value;
+      const iconText = document.getElementById('icon-text').value;
+
+      const sizes = [16, 32, 48, 128];
+
+      sizes.forEach(size => {
+        const canvas = document.getElementById(`icon-${size}`);
+        const ctx = canvas.getContext('2d');
+
+        // 清空画布
+        ctx.clearRect(0, 0, size, size);
+
+        // 根据样式绘制图标
+        switch (style) {
+          case 'camera':
+            drawCameraIcon(ctx, size, primaryColor, secondaryColor);
+            break;
+          case 'text':
+            drawTextIcon(ctx, size, primaryColor, secondaryColor, iconText);
+            break;
+          case 'image':
+            drawImageIcon(ctx, size, primaryColor, secondaryColor);
+            break;
+          case 'gradient':
+            drawGradientIcon(ctx, size, primaryColor, secondaryColor);
+            break;
+        }
+      });
+
+      // 启用下载按钮
+      sizes.forEach(size => {
+        document.getElementById(`download-${size}`).disabled = false;
+      });
+
+      // 保存图标数据
+      sizes.forEach(size => {
+        const canvas = document.getElementById(`icon-${size}`);
+        generatedIcons[size] = canvas.toDataURL('image/png');
+      });
+    }
+
+    // 绘制相机图标
+    function drawCameraIcon(ctx, size, primaryColor, secondaryColor) {
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const scale = size / 128;
+
+      // 背景圆形
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, size / 2 - 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 相机主体
+      ctx.fillStyle = 'white';
+      ctx.fillRect(centerX - 30 * scale, centerY - 20 * scale, 60 * scale, 40 * scale);
+
+      // 相机镜头
+      ctx.fillStyle = secondaryColor;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 15 * scale, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 镜头中心
+      ctx.fillStyle = 'white';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 8 * scale, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 相机顶部
+      ctx.fillStyle = 'white';
+      ctx.fillRect(centerX - 5 * scale, centerY - 30 * scale, 10 * scale, 10 * scale);
+    }
+
+    // 绘制文字图标
+    function drawTextIcon(ctx, size, primaryColor, secondaryColor, text) {
+      const centerX = size / 2;
+      const centerY = size / 2;
+
+      // 渐变背景
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, primaryColor);
+      gradient.addColorStop(1, secondaryColor);
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      // 文字
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size / 3}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text || 'T2S', centerX, centerY);
+    }
+
+    // 绘制图片图标
+    function drawImageIcon(ctx, size, primaryColor, secondaryColor) {
+      const centerX = size / 2;
+      const centerY = size / 2;
+      const margin = size * 0.1;
+
+      // 背景
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(0, 0, size, size);
+
+      // 图片框架
+      ctx.fillStyle = 'white';
+      ctx.fillRect(margin, margin, size - margin * 2, size - margin * 2);
+
+      // 山峰图案
+      ctx.fillStyle = secondaryColor;
+      ctx.beginPath();
+      ctx.moveTo(margin, size - margin);
+      ctx.lineTo(centerX, centerY);
+      ctx.lineTo(size - margin, size - margin);
+      ctx.closePath();
+      ctx.fill();
+
+      // 太阳
+      ctx.fillStyle = '#FFD700';
+      ctx.beginPath();
+      ctx.arc(size - margin * 3, margin * 3, margin / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 绘制渐变图标
+    function drawGradientIcon(ctx, size, primaryColor, secondaryColor) {
+      // 创建复杂渐变
+      const gradient = ctx.createRadialGradient(
+        size / 2, size / 2, 0,
+        size / 2, size / 2, size / 2
+      );
+      gradient.addColorStop(0, secondaryColor);
+      gradient.addColorStop(0.5, primaryColor);
+      gradient.addColorStop(1, secondaryColor);
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, size, size);
+
+      // 添加装饰元素
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+      ctx.font = `bold ${size / 4}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('T2S', size / 2, size / 2);
+    }
+
+    // 下载图标
+    function downloadIcon(size) {
+      const link = document.createElement('a');
+      link.download = `icon${size}.png`;
+      link.href = generatedIcons[size];
+      link.click();
+    }
+
+    // 重置设置
+    function resetSettings() {
+      document.getElementById('icon-style').value = 'camera';
+      document.getElementById('primary-color').value = '#667eea';
+      document.getElementById('primary-color-text').value = '#667eea';
+      document.getElementById('secondary-color').value = '#764ba2';
+      document.getElementById('secondary-color-text').value = '#764ba2';
+      document.getElementById('icon-text').value = '';
+
+      generateIcons();
+    }
+
+    // 随机配色
+    function randomColors() {
+      const randomColor = () => {
+        return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      };
+
+      const primary = randomColor();
+      const secondary = randomColor();
+
+      document.getElementById('primary-color').value = primary;
+      document.getElementById('primary-color-text').value = primary;
+      document.getElementById('secondary-color').value = secondary;
+      document.getElementById('secondary-color-text').value = secondary;
+
+      generateIcons();
+    }
+  </script>
+</body>
+</html>

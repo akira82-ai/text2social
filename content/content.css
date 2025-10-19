@@ -1,0 +1,81 @@
+/* text2social Content Script Styles */
+
+/* 确保浮层样式不被页面样式干扰 */
+#text2social-button {
+  all: initial !important;
+  position: absolute !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 50% !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+  z-index: 2147483647 !important; /* 最高z-index */
+  font-size: 18px !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+#text2social-button:hover {
+  transform: scale(1.1) !important;
+}
+
+#text2social-preview {
+  all: initial !important;
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  width: 300px !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
+  z-index: 2147483647 !important; /* 最高z-index */
+  display: none !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+/* 动画效果 */
+@keyframes text2social-fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes text2social-slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+#text2social-button {
+  animation: text2social-fadeIn 0.3s ease !important;
+}
+
+#text2social-preview {
+  animation: text2social-slideIn 0.3s ease !important;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  #text2social-preview {
+    width: 280px !important;
+    right: 10px !important;
+    top: 10px !important;
+  }
+}
