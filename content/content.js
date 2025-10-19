@@ -352,16 +352,9 @@
 
   // 获取网页信息
   function getPageInfo() {
-    function getFavicon() {
-      const iconLink = document.querySelector('link[rel="icon"]') ||
-                       document.querySelector('link[rel="shortcut icon"]');
-      return iconLink ? iconLink.href : window.location.origin + '/favicon.ico';
-    }
-
     const pageInfo = {
       title: document.title,
       url: window.location.href,
-      favicon: getFavicon(),
       selectedText: selectedText
     };
 
@@ -396,24 +389,29 @@
     showPreview();
 
     try {
-      // 生成图片
-      const canvas = createShareImage(pageInfo);
+      // 生成图片（现在返回Promise）
+      createShareImage(pageInfo).then(canvas => {
+        if (imageContainer) {
+          imageContainer.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = canvas.toDataURL();
+          img.style.cssText = `
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          `;
+          imageContainer.appendChild(img);
+        }
 
-      if (imageContainer) {
-        imageContainer.innerHTML = '';
-        const img = document.createElement('img');
-        img.src = canvas.toDataURL();
-        img.style.cssText = `
-          max-width: 100%;
-          border-radius: 8px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        `;
-        imageContainer.appendChild(img);
-      }
-
-      // 保存canvas供下载使用
-      currentCanvas = canvas;
-      console.log('✅ Preview generated successfully');
+        // 保存canvas供下载使用
+        currentCanvas = canvas;
+        console.log('✅ Preview generated successfully');
+      }).catch(error => {
+        console.error('❌ Error generating preview:', error);
+        if (imageContainer) {
+          imageContainer.innerHTML = '<div style="color: red; text-align: center;">生成失败，请重试</div>';
+        }
+      });
 
     } catch (error) {
       console.error('❌ Error generating preview:', error);
@@ -425,7 +423,149 @@
 
   // 创建分享图片
   function createShareImage(pageInfo) {
-    console.log('🎨 Creating share image...');
+    console.log('🎨 Creating share image using template1...');
+
+    return new Promise((resolve, reject) => {
+      // 创建一个临时的容器来渲染模板
+      const container = document.createElement('div');
+      container.style.cssText = `
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: 1080px;
+        height: 1080px;
+        background: white;
+        z-index: -9999;
+      `;
+
+      // 获取模板URL
+      const templateUrl = chrome.runtime.getURL('templates/template1.html');
+
+      // 先生成二维码
+      generateQRCodeInContentScript(pageInfo.url || window.location.href)
+        .then(qrCodeDataUrl => {
+          console.log('✅ QR Code generated as data URL');
+
+          // 加载模板内容
+          return fetch(templateUrl).then(response => response.text()).then(htmlContent => {
+            return { htmlContent, qrCodeDataUrl };
+          });
+        })
+        .then(({ htmlContent, qrCodeDataUrl }) => {
+          // 替换模板变量 - 只保留三种核心元素
+          let processedHtml = htmlContent
+            .replace(/{{title}}/g, pageInfo.title || '未知标题')
+            .replace(/{{text}}/g, pageInfo.selectedText || '无内容')
+            // 替换二维码占位符为实际的二维码图片
+            .replace('<div class="qr-placeholder">QR</div>',
+                     `<img src="${qrCodeDataUrl}" style="width:80px;height:80px;" alt="QR Code">`);
+
+          // 修复CSS和JS路径
+          processedHtml = processedHtml
+            .replace('href="template1.css"', `href="${chrome.runtime.getURL('templates/template1.css')}"`)
+            .replace('href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap"',
+                     `href="${chrome.runtime.getURL('fonts/fonts.css')}"`);
+
+          // 完全移除script标签和其中的所有内容
+          processedHtml = processedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+
+          // 移除HTML注释
+          processedHtml = processedHtml.replace(/<!--[\s\S]*?-->/g, '');
+
+          // 移除多余的空白字符和换行
+          processedHtml = processedHtml.replace(/\s+/g, ' ').trim();
+
+          console.log('📄 Processed HTML length:', processedHtml.length);
+
+          container.innerHTML = processedHtml;
+          document.body.appendChild(container);
+
+          // 二维码已经生成，直接进行图片转换
+          setTimeout(() => {
+            console.log('📸 Converting template to image...');
+
+            // 使用html2canvas转换成图片
+            html2canvas(container, {
+              width: 1080,
+              height: 1080,
+              scale: 1,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: '#ffffff',
+              logging: false
+            }).then(canvas => {
+              // 移除临时容器
+              document.body.removeChild(container);
+              console.log('✅ Share image created using template1');
+              resolve(canvas);
+            }).catch(error => {
+              console.error('❌ Error creating image from template:', error);
+              document.body.removeChild(container);
+
+              // 如果模板失败，回退到原始Canvas方法
+              console.log('🔄 Falling back to Canvas method...');
+              const fallbackCanvas = createShareImageCanvas(pageInfo);
+              resolve(fallbackCanvas);
+            });
+          }, 500); // 等待CSS和字体加载
+        })
+        .catch(error => {
+          console.error('❌ Error loading template:', error);
+
+          // 如果模板加载失败，使用原始Canvas方法
+          console.log('🔄 Falling back to Canvas method...');
+          const fallbackCanvas = createShareImageCanvas(pageInfo);
+          resolve(fallbackCanvas);
+        });
+    });
+  }
+
+  // 在content script中生成二维码
+  function generateQRCodeInContentScript(url) {
+    return new Promise((resolve, reject) => {
+      try {
+        console.log('🔲 Generating QR code in content script for:', url);
+
+        // 创建临时div来生成二维码
+        const tempDiv = document.createElement('div');
+        tempDiv.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+        document.body.appendChild(tempDiv);
+
+        // 在content script环境中生成二维码
+        const qrCode = new QRCode(tempDiv, {
+          text: url,
+          width: 80,
+          height: 80,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
+        });
+
+        // 等待二维码生成完成
+        setTimeout(() => {
+          const img = tempDiv.querySelector('img');
+          if (img && img.src) {
+            console.log('✅ QR code generated successfully');
+            const dataUrl = img.src;
+            document.body.removeChild(tempDiv);
+            resolve(dataUrl);
+          } else {
+            console.error('❌ QR code image not found');
+            document.body.removeChild(tempDiv);
+            reject(new Error('QR code image not found'));
+          }
+        }, 500);
+
+      } catch (error) {
+        console.error('❌ Error generating QR code:', error);
+        reject(error);
+      }
+    });
+  }
+
+  // 回退的Canvas方法（原实现）
+  function createShareImageCanvas(pageInfo) {
+    console.log('🎨 Creating share image using Canvas method...');
 
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');

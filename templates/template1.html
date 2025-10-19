@@ -10,7 +10,6 @@
 <body>
   <div class="template-container">
     <div class="header">
-      <img class="favicon" src="{{favicon}}" alt="网站图标" onerror="this.style.display='none'">
       <div class="title">{{title}}</div>
     </div>
 
@@ -20,32 +19,9 @@
 
     <div class="footer">
       <div class="qr-code">
-        <!-- 二维码将在这里动态生成 -->
         <div class="qr-placeholder">QR</div>
       </div>
-      <div class="url">{{url}}</div>
     </div>
   </div>
-
-  <script src="../../assets/libs/qrcode.min.js"></script>
-  <script>
-    // 生成二维码
-    function generateQRCode(text) {
-      const qrContainer = document.querySelector('.qr-placeholder');
-      new QRCode(qrContainer, {
-        text: text,
-        width: 80,
-        height: 80,
-        colorDark: '#000000',
-        colorLight: '#ffffff'
-      });
-    }
-
-    // 初始化
-    document.addEventListener('DOMContentLoaded', () => {
-      const url = document.querySelector('.url').textContent;
-      generateQRCode(url);
-    });
-  </script>
 </body>
 </html>
