@@ -2,7 +2,6 @@
 
 /* 确保浮层样式不被页面样式干扰 */
 #text2social-button {
-  all: initial !important;
   position: absolute !important;
   width: 40px !important;
   height: 40px !important;
@@ -20,12 +19,16 @@
   font-family: system-ui, -apple-system, sans-serif !important;
 }
 
+/* 显示状态 */
+#text2social-button.visible {
+  display: flex !important;
+}
+
 #text2social-button:hover {
   transform: scale(1.1) !important;
 }
 
 #text2social-preview {
-  all: initial !important;
   position: fixed !important;
   top: 20px !important;
   right: 20px !important;
@@ -34,10 +37,17 @@
   border-radius: 12px !important;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2) !important;
   z-index: 2147483647 !important; /* 最高z-index */
-  display: none !important;
+  display: none !important; /* 使用display来控制显示/隐藏 */
   flex-direction: column !important;
   overflow: hidden !important;
   font-family: system-ui, -apple-system, sans-serif !important;
+  transition: all 0.3s ease !important;
+}
+
+/* 显示状态 */
+#text2social-preview.visible {
+  display: flex !important;
+  animation: text2social-slideIn 0.3s ease !important;
 }
 
 /* 动画效果 */

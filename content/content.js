@@ -6,6 +6,12 @@
 (function() {
   'use strict';
 
+  // 检查Chrome扩展API是否可用
+  if (typeof chrome === 'undefined' || !chrome.runtime) {
+    console.error('❌ Chrome extension API not available in content script');
+    return;
+  }
+
   console.log('🚀 text2social content script loaded');
 
   // 全局变量
@@ -19,32 +25,74 @@
   // 初始化
   function init() {
     console.log('🔧 Initializing text2social...');
-    createFloatingButton();
-    createPreviewWindow();
-    bindEvents();
-    console.log('✅ text2social initialized successfully');
+
+    try {
+      createFloatingButton();
+      createPreviewWindow();
+      bindEvents();
+
+      // 添加调试功能
+      window.text2socialDebug = {
+        testPreview: () => {
+          console.log('🧪 Testing preview functionality...');
+          selectedText = '测试文字';
+          showPreview();
+        },
+        hidePreview: () => hidePreview(),
+        getStatus: () => ({
+          selectedText,
+          buttonVisible,
+          previewVisible,
+          buttonExists: !!button,
+          previewExists: !!previewWindow
+        })
+      };
+
+      console.log('✅ text2social initialized successfully');
+      console.log('🔍 Debug functions available: window.text2socialDebug');
+    } catch (error) {
+      console.error('❌ Error during initialization:', error);
+    }
   }
 
   // 创建浮动按钮
   function createFloatingButton() {
     console.log('🔧 Creating floating button...');
 
-    button = document.createElement('div');
-    button.id = 'text2social-button';
-    button.innerHTML = '<img src="' + chrome.runtime.getURL('icons/camera-icon.png') + '" style="width: 20px; height: 20px;">';
-    button.style.cssText = `
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 2147483647;
-    `;
+    try {
+      button = document.createElement('div');
+      button.id = 'text2social-button';
+
+      // 安全获取图标URL
+      let iconUrl = '';
+      let useImage = false;
+
+      try {
+        iconUrl = chrome.runtime.getURL('icons/camera-icon.png');
+        console.log('🔍 Camera icon URL:', iconUrl);
+        // Chrome扩展URL通常以 chrome-extension:// 开头
+        useImage = iconUrl && (iconUrl.includes('chrome-extension://') || iconUrl.includes('http'));
+      } catch (error) {
+        console.warn('⚠️ Could not load camera icon, using emoji:', error);
+        iconUrl = '📷';
+        useImage = false;
+      }
+
+      if (useImage) {
+        button.innerHTML = `<img src="${iconUrl}" style="width: 20px; height: 20px; display: block;">`;
+        console.log('✅ Using camera icon image');
+      } else {
+        button.innerHTML = `<span style="font-size: 20px; display: block;">${iconUrl}</span>`;
+        console.log('✅ Using emoji fallback');
+      }
+    // 基本样式由CSS文件控制，不需要内联样式
+    // 按钮默认是隐藏的 (display: none)
 
     document.body.appendChild(button);
-    console.log('✅ Floating button created');
+      console.log('✅ Floating button created');
+    } catch (error) {
+      console.error('❌ Error creating floating button:', error);
+    }
   }
 
   // 创建预览窗口
@@ -53,20 +101,8 @@
 
     previewWindow = document.createElement('div');
     previewWindow.id = 'text2social-preview';
-    previewWindow.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 300px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      z-index: 2147483647;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-      font-family: system-ui, -apple-system, sans-serif;
-    `;
+    // 不需要内联样式，CSS文件已经定义了所有样式
+    // previewWindow的样式由content.css控制
 
     // 预览标题
     const previewHeader = document.createElement('div');
@@ -131,7 +167,75 @@
     previewWindow.appendChild(imageContainer);
     previewWindow.appendChild(actionButtons);
     document.body.appendChild(previewWindow);
+
+    // 绑定预览窗口相关事件
+    bindPreviewEvents();
+
     console.log('✅ Preview window created');
+  }
+
+  // 绑定预览窗口相关事件
+  function bindPreviewEvents() {
+    console.log('🔧 Binding preview window events...');
+
+    // 关闭预览
+    const closeBtn = document.getElementById('close-preview');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        console.log('❌ Close preview clicked');
+        hidePreview();
+      });
+      console.log('✅ Close preview event bound');
+    } else {
+      console.error('❌ Close preview button not found!');
+    }
+
+    // 下载图片
+    const downloadBtn = document.getElementById('download-image');
+    if (downloadBtn) {
+      downloadBtn.addEventListener('click', function() {
+        console.log('💾 Download clicked');
+        downloadImage();
+      });
+      console.log('✅ Download event bound');
+    } else {
+      console.error('❌ Download button not found!');
+    }
+
+    // 复制图片
+    const copyBtn = document.getElementById('copy-image');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        console.log('📋 Copy clicked');
+        copyImage();
+      });
+      console.log('✅ Copy event bound');
+    } else {
+      console.error('❌ Copy button not found!');
+    }
+  }
+
+  // 绑定按钮事件（独立函数，方便重新绑定）
+  function bindButtonEvents() {
+    console.log('🔧 Binding button events...');
+
+    if (button) {
+      // 移除之前的事件监听器（如果存在）
+      button.removeEventListener('click', handleButtonClick);
+      // 添加新的事件监听器
+      button.addEventListener('click', handleButtonClick);
+      console.log('✅ Button click event rebound');
+    } else {
+      console.error('❌ Button not found for event rebinding!');
+    }
+  }
+
+  // 按钮点击处理函数
+  function handleButtonClick() {
+    console.log('📸 Button clicked!');
+    event.preventDefault();
+    event.stopPropagation();
+    generatePreview();
   }
 
   // 绑定事件
@@ -181,42 +285,10 @@
       }
     });
 
-    // 按钮点击事件
-    if (button) {
-      button.addEventListener('click', function() {
-        console.log('📸 Button clicked');
-        generatePreview();
-      });
-    }
+    // 按钮点击事件 - 使用新的绑定函数
+    bindButtonEvents();
 
-    // 关闭预览
-    const closeBtn = document.getElementById('close-preview');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', function() {
-        console.log('❌ Close preview clicked');
-        hidePreview();
-      });
-    }
-
-    // 下载图片
-    const downloadBtn = document.getElementById('download-image');
-    if (downloadBtn) {
-      downloadBtn.addEventListener('click', function() {
-        console.log('💾 Download clicked');
-        downloadImage();
-      });
-    }
-
-    // 复制图片
-    const copyBtn = document.getElementById('copy-image');
-    if (copyBtn) {
-      copyBtn.addEventListener('click', function() {
-        console.log('📋 Copy clicked');
-        copyImage();
-      });
-    }
-
-    console.log('✅ All events bound');
+    console.log('✅ Main events bound');
   }
 
   // 显示浮动按钮
@@ -227,23 +299,14 @@
     if (!button || !document.body.contains(button)) {
       console.error('❌ Button not found in DOM, recreating...');
       createFloatingButton();
+      // 重新绑定事件监听器，因为创建了新按钮
+      bindButtonEvents();
     }
 
-    // 重新设置所有样式确保正确显示
-    button.style.cssText = `
-      position: absolute !important;
-      width: 40px !important;
-      height: 40px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      cursor: pointer !important;
-      z-index: 2147483647 !important;
-      left: ${(x + 10)}px !important;
-      top: ${(y - 50)}px !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-    `;
+    // 设置位置和显示状态
+    button.style.left = `${x + 10}px`;
+    button.style.top = `${y - 50}px`;
+    button.classList.add('visible');
 
     buttonVisible = true;
 
@@ -281,7 +344,7 @@
   // 隐藏浮动按钮
   function hideButton() {
     if (button) {
-      button.style.display = 'none';
+      button.classList.remove('visible');
     }
     buttonVisible = false;
     console.log('🙈 Button hidden');
@@ -308,15 +371,28 @@
 
   // 生成预览
   function generatePreview() {
-    console.log('🎨 Generating preview...');
+    console.log('🎨 Starting preview generation...');
+    console.log('📝 Selected text:', selectedText);
+
     const pageInfo = getPageInfo();
+    console.log('📄 Page info:', pageInfo);
+
+    // 检查预览窗口是否存在
+    if (!previewWindow) {
+      console.error('❌ Preview window not found, recreating...');
+      createPreviewWindow();
+    }
 
     // 显示加载状态
     const imageContainer = document.getElementById('preview-image-container');
     if (imageContainer) {
+      console.log('✅ Image container found, showing loading state...');
       imageContainer.innerHTML = '<div style="text-align: center;">生成中...</div>';
+    } else {
+      console.error('❌ Image container not found!');
     }
 
+    console.log('👁️ Showing preview window...');
     showPreview();
 
     try {
@@ -404,12 +480,67 @@
     ctx.font = '32px "PingFang SC", "Microsoft YaHei", sans-serif';
     ctx.fillText('—— ' + pageInfo.title, canvas.width / 2, 850);
 
-    // 二维码占位符
-    ctx.fillStyle = '#ddd';
-    ctx.fillRect(850, 850, 120, 120);
-    ctx.fillStyle = '#999';
-    ctx.font = '16px Arial';
-    ctx.fillText('QR码', 910, 915);
+    // 生成二维码
+    try {
+      console.log('🔲 Generating QR code for URL:', pageInfo.url);
+
+      // 创建一个临时的canvas来生成二维码
+      const qrCanvas = document.createElement('canvas');
+      qrCanvas.width = 120;
+      qrCanvas.height = 120;
+
+      // 使用QRCode库直接生成到canvas
+      const qrCode = new QRCode(document.createElement('div'), {
+        text: pageInfo.url,
+        width: 120,
+        height: 120,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+
+      // 获取QR码数据并手动绘制
+      const qr = qrCode._oQRCode;
+      if (qr && qr.modules) {
+        const cellSize = 120 / qr.getModuleCount();
+        const qrCtx = qrCanvas.getContext('2d');
+
+        // 绘制白色背景
+        qrCtx.fillStyle = '#ffffff';
+        qrCtx.fillRect(0, 0, 120, 120);
+
+        // 绘制二维码模块
+        for (let row = 0; row < qr.getModuleCount(); row++) {
+          for (let col = 0; col < qr.getModuleCount(); col++) {
+            if (qr.isDark(row, col)) {
+              qrCtx.fillStyle = '#000000';
+              qrCtx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+            }
+          }
+        }
+
+        // 将二维码绘制到主画布上
+        ctx.drawImage(qrCanvas, 850, 850, 120, 120);
+        console.log('✅ QR code generated and drawn');
+      } else {
+        // 如果QR码数据生成失败，使用占位符
+        console.warn('⚠️ QR code data not available, using placeholder');
+        ctx.fillStyle = '#ddd';
+        ctx.fillRect(850, 850, 120, 120);
+        ctx.fillStyle = '#999';
+        ctx.font = '16px Arial';
+        ctx.fillText('QR码', 910, 915);
+      }
+
+    } catch (error) {
+      console.error('❌ Error generating QR code:', error);
+      // 如果二维码生成失败，使用占位符
+      ctx.fillStyle = '#ddd';
+      ctx.fillRect(850, 850, 120, 120);
+      ctx.fillStyle = '#999';
+      ctx.font = '16px Arial';
+      ctx.fillText('QR码', 910, 915);
+    }
 
     console.log('✅ Share image created');
     return canvas;
@@ -432,21 +563,27 @@
 
   // 显示预览窗口
   function showPreview() {
+    console.log('👁️ Attempting to show preview window...');
     if (previewWindow) {
-      previewWindow.style.display = 'flex';
+      console.log('🔍 Preview window found, adding visible class...');
+      previewWindow.classList.add('visible');
       previewVisible = true;
       hideButton();
-      console.log('👁️ Preview window shown');
+      console.log('✅ Preview window shown successfully');
+    } else {
+      console.error('❌ Preview window not found!');
     }
   }
 
   // 隐藏预览窗口
   function hidePreview() {
+    console.log('🙈 Attempting to hide preview window...');
     if (previewWindow) {
-      previewWindow.style.display = 'none';
+      console.log('🔍 Preview window found, removing visible class...');
+      previewWindow.classList.remove('visible');
     }
     previewVisible = false;
-    console.log('🙈 Preview window hidden');
+    console.log('✅ Preview window hidden successfully');
   }
 
   // 下载图片

@@ -1,12 +1,13 @@
 {
   "manifest_version": 3,
   "name": "text2social",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "将网页选中的文字转换为精美的社交媒体分享图片",
 
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "scripting"
   ],
 
   "content_scripts": [
