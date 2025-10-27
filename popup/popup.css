@@ -112,3 +112,16 @@ body {
   color: #999;
   margin: 2px 0;
 }
+
+.footer .contact {
+  text-align: center;
+}
+
+.footer a {
+  color: #667eea;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
