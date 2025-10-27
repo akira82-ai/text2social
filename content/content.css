@@ -81,6 +81,25 @@
   animation: text2social-slideIn 0.3s ease !important;
 }
 
+/* 模板选择区域样式 */
+#template-selector {
+  padding: 15px !important;
+  background: #f8f9fa !important;
+  border-bottom: 1px solid #eee !important;
+}
+
+.template-option {
+  text-align: center !important;
+  cursor: pointer !important;
+  padding: 5px 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.template-option:hover {
+  background: #e9ecef !important;
+  border-radius: 6px !important;
+}
+
 /* 响应式适配 */
 @media (max-width: 768px) {
   #text2social-preview {

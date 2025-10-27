@@ -21,6 +21,30 @@
   let button, previewWindow, currentCanvas;
   let justShownButton = false;
   let buttonShowTimer = null;
+  let currentTemplate = 'template1'; // 默认模板
+  const availableTemplates = ['template1']; // 目前只有template1，后续可动态获取
+
+  // 获取所有可用模板
+  function getAvailableTemplates() {
+    // 这里可以动态从templates目录获取模板列表
+    // 目前只返回已知的模板
+    return availableTemplates;
+  }
+  
+  // 获取模板对应的图标
+  function getTemplateIcon(templateName) {
+    // 根据模板名称返回对应的图标
+    const iconMap = {
+      'template1': '📄',
+      'template2': '📝',
+      'template3': '📋',
+      'template4': '📊',
+      'template5': '🎨',
+      'default': '📄'
+    };
+    
+    return iconMap[templateName] || iconMap.default;
+  }
 
   // 初始化
   function init() {
@@ -120,6 +144,33 @@
       <span id="close-preview" style="cursor: pointer; font-size: 18px;">✕</span>
     `;
 
+    // 模板选择区域
+    const templateSelector = document.createElement('div');
+    templateSelector.id = 'template-selector';
+    templateSelector.style.cssText = `
+      padding: 15px;
+      background: #f8f9fa;
+      border-bottom: 1px solid #eee;
+    `;
+    
+    // 创建模板选择HTML
+    const templates = getAvailableTemplates();
+    let templateHtml = '<div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">';
+    
+    templates.forEach(template => {
+      const icon = getTemplateIcon(template); // 获取模板对应的图标
+      const isActive = template === currentTemplate ? 'style="color: #667eea; font-weight: bold;"' : '';
+      templateHtml += `
+        <div class="template-option" data-template="${template}" style="text-align: center; cursor: pointer; padding: 5px 10px;">
+          <div ${isActive}>${icon}</div>
+          <div ${isActive} style="font-size: 12px; margin-top: 4px;">${template}</div>
+        </div>
+      `;
+    });
+    
+    templateHtml += '</div>';
+    templateSelector.innerHTML = templateHtml;
+
     // 图片容器
     const imageContainer = document.createElement('div');
     imageContainer.id = 'preview-image-container';
@@ -164,6 +215,7 @@
     `;
 
     previewWindow.appendChild(previewHeader);
+    previewWindow.appendChild(templateSelector);
     previewWindow.appendChild(imageContainer);
     previewWindow.appendChild(actionButtons);
     document.body.appendChild(previewWindow);
@@ -213,6 +265,16 @@
     } else {
       console.error('❌ Copy button not found!');
     }
+    
+    // 绑定模板选择事件
+    const templateOptions = document.querySelectorAll('.template-option');
+    templateOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const template = this.getAttribute('data-template');
+        console.log('🎨 Template selected:', template);
+        changeTemplate(template);
+      });
+    });
   }
 
   // 绑定按钮事件（独立函数，方便重新绑定）
@@ -490,7 +552,7 @@
 
     try {
       // 生成图片（现在返回Promise）
-      createShareImage(pageInfo).then(canvas => {
+      createShareImageWithTemplate(pageInfo, currentTemplate).then(canvas => {
         if (imageContainer) {
           imageContainer.innerHTML = '';
           const img = document.createElement('img');
@@ -567,7 +629,7 @@
                      `href="${chrome.runtime.getURL('fonts/fonts.css')}"`);
 
           // 完全移除script标签和其中的所有内容
-          processedHtml = processedHtml.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+          processedHtml = processedHtml.replace(/<script\\b[^>]*>.*?<\/script>/gi, '');
 
           // 移除HTML注释
           processedHtml = processedHtml.replace(/<!--[\s\S]*?-->/g, '');
@@ -872,17 +934,218 @@
       return;
     }
 
+    // 获取复制按钮元素
+    const copyBtn = document.getElementById('copy-image');
+    if (!copyBtn) {
+      console.error('❌ Copy button not found');
+      return;
+    }
+
+    // 保存原始按钮文本
+    const originalText = copyBtn.textContent;
+
     try {
       currentCanvas.toBlob(async function(blob) {
         const item = new ClipboardItem({ 'image/png': blob });
         await navigator.clipboard.write([item]);
-        alert('图片已复制到剪贴板');
+        
+        // 更改按钮文本为"已复制"
+        copyBtn.textContent = '已复制';
+        
+        // 3秒后恢复原始文本
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+        }, 3000);
+        
         console.log('📋 Image copied to clipboard');
       });
     } catch (error) {
       console.error('❌ Error copying image:', error);
-      alert('复制失败，请使用下载功能');
+      
+      // 更改按钮文本为"复制失败"
+      copyBtn.textContent = '复制失败';
+      
+      // 3秒后恢复原始文本
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+      }, 3000);
     }
+  }
+
+  // 切换模板
+  async function changeTemplate(templateName) {
+    if (!selectedText) {
+      console.error('❌ No text selected to generate preview with new template');
+      return;
+    }
+
+    // 更新当前模板
+    currentTemplate = templateName;
+    console.log('🎨 Switching to template:', templateName);
+
+    // 更新模板选择区域的显示状态
+    updateTemplateSelectionUI();
+
+    // 重新生成预览
+    const pageInfo = {
+      title: document.title,
+      url: window.location.href,
+      selectedText: selectedText
+    };
+
+    // 显示加载状态
+    const imageContainer = document.getElementById('preview-image-container');
+    if (imageContainer) {
+      imageContainer.innerHTML = '<div style="text-align: center;">切换中...</div>';
+    }
+
+    try {
+      // 生成新模板的图片
+      const canvas = await createShareImageWithTemplate(pageInfo, templateName);
+      if (imageContainer) {
+        imageContainer.innerHTML = '';
+        const img = document.createElement('img');
+        img.src = canvas.toDataURL();
+        img.style.cssText = `
+          max-width: 100%;
+          border-radius: 8px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        `;
+        imageContainer.appendChild(img);
+      }
+
+      // 保存canvas供下载使用
+      currentCanvas = canvas;
+      console.log('✅ Template switched and preview updated successfully');
+    } catch (error) {
+      console.error('❌ Error switching template:', error);
+      if (imageContainer) {
+        imageContainer.innerHTML = '<div style="color: red; text-align: center;">切换失败，请重试</div>';
+      }
+    }
+  }
+  
+  // 更新模板选择UI的显示状态
+  function updateTemplateSelectionUI() {
+    const templateOptions = document.querySelectorAll('.template-option');
+    templateOptions.forEach(option => {
+      const template = option.getAttribute('data-template');
+      const iconDiv = option.querySelector('div:first-child');
+      const nameDiv = option.querySelector('div:last-child');
+      
+      if (template === currentTemplate) {
+        // 当前模板高亮显示
+        iconDiv.style.color = '#667eea';
+        iconDiv.style.fontWeight = 'bold';
+        nameDiv.style.color = '#667eea';
+        nameDiv.style.fontWeight = 'bold';
+      } else {
+        // 其他模板正常显示
+        iconDiv.style.color = '';
+        iconDiv.style.fontWeight = '';
+        nameDiv.style.color = '';
+        nameDiv.style.fontWeight = '';
+      }
+    });
+  }
+
+  // 使用指定模板创建分享图片
+  function createShareImageWithTemplate(pageInfo, templateName) {
+    console.log(`🎨 Creating share image using ${templateName}...`);
+
+    return new Promise((resolve, reject) => {
+      // 创建一个临时的容器来渲染模板
+      const container = document.createElement('div');
+      container.style.cssText = `
+        position: fixed;
+        top: -9999px;
+        left: -9999px;
+        width: 1080px;
+        height: 1080px;
+        background: white;
+        z-index: -9999;
+      `;
+
+      // 获取模板URL
+      const templateUrl = chrome.runtime.getURL(`templates/${templateName}.html`);
+
+      // 先生成二维码
+      generateQRCodeInContentScript(pageInfo.url || window.location.href)
+        .then(qrCodeDataUrl => {
+          console.log('✅ QR Code generated as data URL');
+
+          // 加载模板内容
+          return fetch(templateUrl).then(response => response.text()).then(htmlContent => {
+            return { htmlContent, qrCodeDataUrl };
+          });
+        })
+        .then(({ htmlContent, qrCodeDataUrl }) => {
+          // 替换模板变量 - 只保留三种核心元素
+          let processedHtml = htmlContent
+            .replace(/{{title}}/g, pageInfo.title || '未知标题')
+            .replace(/{{text}}/g, cleanHtmlContent(pageInfo.selectedText) || '无内容')
+            // 替换二维码占位符为实际的二维码图片
+            .replace('<div class="qr-placeholder">QR</div>',
+                     `<img src="${qrCodeDataUrl}" style="width:80px;height:80px;" alt="QR Code">`);
+
+          // 修复CSS和JS路径
+          processedHtml = processedHtml
+            .replace('href="template1.css"', `href="${chrome.runtime.getURL('templates/' + templateName + '.css')}"`)
+            .replace('href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap"',
+                     `href="${chrome.runtime.getURL('fonts/fonts.css')}"`);
+
+          // 完全移除script标签和其中的所有内容
+          processedHtml = processedHtml.replace(/<script\\b[^>]*>.*?<\/script>/gi, '');
+
+          // 移除HTML注释
+          processedHtml = processedHtml.replace(/<!--[\\s\\S]*?-->/g, '');
+
+          // 移除多余的空白字符和换行
+          processedHtml = processedHtml.replace(/\\s+/g, ' ').trim();
+
+          console.log('📄 Processed HTML length:', processedHtml.length);
+
+          container.innerHTML = processedHtml;
+          document.body.appendChild(container);
+
+          // 二维码已经生成，直接进行图片转换
+          setTimeout(() => {
+            console.log('📸 Converting template to image...');
+
+            // 使用html2canvas转换成图片
+            html2canvas(container, {
+              width: 1080,
+              height: 1080,
+              scale: 1,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: '#ffffff',
+              logging: false
+            }).then(canvas => {
+              // 移除临时容器
+              document.body.removeChild(container);
+              console.log(`✅ Share image created using ${templateName}`);
+              resolve(canvas);
+            }).catch(error => {
+              console.error(`❌ Error creating image from ${templateName}:`, error);
+              document.body.removeChild(container);
+
+              // 如果模板失败，回退到原始Canvas方法
+              console.log('🔄 Falling back to Canvas method...');
+              const fallbackCanvas = createShareImageCanvas(pageInfo);
+              resolve(fallbackCanvas);
+            });
+          }, 500); // 等待CSS和字体加载
+        })
+        .catch(error => {
+          console.error(`❌ Error loading ${templateName}:`, error);
+
+          // 如果模板加载失败，使用原始Canvas方法
+          console.log('🔄 Falling back to Canvas method...');
+          const fallbackCanvas = createShareImageCanvas(pageInfo);
+          resolve(fallbackCanvas);
+        });
+    });
   }
 
   // 页面加载完成后初始化
