@@ -3,80 +3,78 @@
  * 处理插件后台逻辑
  */
 
-// 等待Chrome扩展API加载完成
 (function() {
   'use strict';
 
-  // 检查Chrome API是否可用
   if (typeof chrome === 'undefined' || !chrome.runtime) {
-    console.error('❌ Chrome extension API not available');
+    console.error('Chrome extension API not available');
     return;
   }
 
-  console.log('🚀 text2social background script loaded');
+  const templateCache = {};
+  const TEMPLATE_FILES = ['template1.html', '纯文本.html', '黑色.html'];
 
-  // 插件安装监听器
-  try {
-    chrome.runtime.onInstalled.addListener(() => {
-      console.log('✅ text2social 插件已安装');
-    });
-  } catch (error) {
-    console.error('❌ Error installing onInstalled listener:', error);
-  }
+  chrome.runtime.onInstalled.addListener(() => {
+    refreshTemplateCache();
+  });
 
-  // 处理来自content script的消息
-  try {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log('📨 Background message received:', request.action);
+  refreshTemplateCache();
 
-      switch (request.action) {
-        case 'generateImage':
-          // 处理图片生成请求
-          handleImageGeneration(request.data, sender.tab)
-            .then(result => {
-              console.log('✅ Image generation completed');
-              sendResponse({ success: true, data: result });
-            })
-            .catch(error => {
-              console.error('❌ Image generation failed:', error);
-              sendResponse({ success: false, error: error.message });
-            });
-          return true; // 保持消息通道开放
-
-        case 'log':
-          // 处理日志消息
-          console.log('📝 Content script log:', request.data);
-          break;
-
-        default:
-          console.warn('⚠️ Unknown action:', request.action);
-          break;
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    const actionHandlers = {
+      'generateImage': async () => {
+        const result = await handleImageGeneration(request.data);
+        return { success: true, data: result };
+      },
+      'getTemplate': () => {
+        const templateName = request.templateName;
+        if (templateCache[templateName]) {
+          return { success: true, template: templateCache[templateName] };
+        }
+        return { success: false, error: 'Template not found' };
+      },
+      'getAvailableTemplates': () => {
+        return { success: true, templates: Object.keys(templateCache) };
+      },
+      'refreshTemplates': () => {
+        refreshTemplateCache();
+        return { success: true };
       }
-    });
-  } catch (error) {
-    console.error('❌ Error installing message listener:', error);
-  }
+    };
 
-  // 处理图片生成的异步函数
-  async function handleImageGeneration(data, tab) {
-    console.log('🎨 Processing image generation request:', data);
+    const handler = actionHandlers[request.action];
+    if (handler) {
+      handler().then(response => sendResponse(response))
+               .catch(error => sendResponse({ success: false, error: error.message }));
+      return true;
+    }
+  });
 
-    try {
-      // 这里可以实现更复杂的图片生成逻辑
-      // 例如：调用外部API、处理复杂模板等
-      const result = {
-        generatedAt: new Date().toISOString(),
-        tabId: tab ? tab.id : null,
-        success: true
-      };
+  async function refreshTemplateCache() {
+    for (const templateFile of TEMPLATE_FILES) {
+      try {
+        const templateName = templateFile.replace(/\.[^/.]+$/, "");
+        const templateUrl = chrome.runtime.getURL(`templates/${templateFile}`);
 
-      console.log('✅ Image generation result:', result);
-      return result;
-    } catch (error) {
-      console.error('❌ Error in handleImageGeneration:', error);
-      throw error;
+        const response = await fetch(templateUrl);
+        const content = await response.text();
+
+        templateCache[templateName] = {
+          content: content,
+          file: templateFile,
+          lastUpdated: new Date().toISOString()
+        };
+      } catch (error) {
+        console.error(`Error loading template ${templateFile}:`, error);
+      }
     }
   }
 
-  console.log('✅ text2social background script initialized');
+  async function handleImageGeneration(data) {
+    return {
+      generatedAt: new Date().toISOString(),
+      success: true
+    };
+  }
+
 })();
