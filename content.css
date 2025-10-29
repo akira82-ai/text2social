@@ -1,0 +1,53 @@
+/* Text2Social Content Script Styles */
+
+/* Icon styles */
+#text2social-icon {
+  position: fixed;
+  z-index: 10000;
+  width: 40px;
+  height: 40px;
+  background-color: #4285f4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+}
+
+#text2social-icon:hover {
+  transform: scale(1.1);
+  background-color: #3367d6;
+}
+
+/* Hidden container for image export */
+#text2social-hidden-container {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  z-index: -1;
+}
+
+/* Notification styles */
+.text2social-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #34a853;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10000;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(100%); }
+  10% { opacity: 1; transform: translateX(0); }
+  90% { opacity: 1; transform: translateX(0); }
+  100% { opacity: 0; transform: translateX(100%); }
+}
