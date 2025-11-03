@@ -1,0 +1,103 @@
+/* styles/reset.css */
+/* 基础样式重置 */
+
+/* 防止在某些浏览器中出现双击缩放 */
+html {
+  touch-action: manipulation;
+}
+
+/* 重置所有元素的box-sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* 重置body和html默认样式 */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background-color: var(--background-color);
+}
+
+/* 重置常见元素的默认样式 */
+h1, h2, h3, h4, h5, h6,
+p, ul, ol, li,
+div, span, a,
+button, input, textarea, select {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+/* 设置列表样式 */
+ul, ol {
+  list-style: none;
+}
+
+/* 设置表格样式 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* 设置图片样式 */
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+}
+
+/* 设置链接样式 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 设置按钮样式 */
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* 设置输入框样式 */
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* 移除输入框的默认样式 */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* 设置焦点样式 */
+*:focus {
+  outline: none;
+}
+
+/* 防止文本选择 */
+.no-select {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

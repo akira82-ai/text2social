@@ -1,55 +1,50 @@
-// Text2Social Content Script
-// Main entry point for the extension functionality
+// Text2Social 扩展主入口脚本
+// 监听页面上的文字选择事件
 
-// Initialize modules in proper order
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize all modules when DOM is ready
-  if (window.TextSelection && window.IconDisplay && window.TemplateManager && window.PreviewRenderer && window.ImageExporter) {
-    console.log('Text2Social: All modules loaded, initializing...');
-    
-    // Initialize the feature
-    const text2Social = new Text2Social();
-    text2Social.init();
-  }
-});
-
-// Main Text2Social controller class
-class Text2Social {
+class Text2SocialContent {
   constructor() {
-    this.textSelection = new window.TextSelection();
-    this.iconDisplay = new window.IconDisplay();
-    this.templateManager = new window.TemplateManager();
-    this.previewRenderer = new window.PreviewRenderer();
-    this.imageExporter = new window.ImageExporter();
+    this.selectedText = '';
+    this.isInitialized = false;
+    this.init();
   }
 
   init() {
-    // Initialize text selection detection
-    this.textSelection.init();
+    // 初始化内容脚本
+    this.bindEvents();
+    this.isInitialized = true;
+  }
+
+  bindEvents() {
+    // 绑定文字选择事件
+    document.addEventListener('mouseup', this.handleTextSelection.bind(this));
+  }
+
+  handleTextSelection() {
+    // 处理文字选择逻辑
+    this.selectedText = this.getSelectedText();
     
-    // Listen for text selection events
-    this.textSelection.onTextSelected((selectedText) => {
-      // Show icon near selected text
-      this.iconDisplay.showIcon(selectedText);
-    });
-    
-    // Listen for icon click events
-    this.iconDisplay.onIconClick((selectedText) => {
-      // Load templates and show preview
-      const templates = this.templateManager.getTemplates();
-      this.previewRenderer.showPreview(selectedText, templates);
-    });
-    
-    // Listen for template selection events
-    this.previewRenderer.onTemplateSelected((templateId, selectedText) => {
-      // Render selected template with text
-      this.previewRenderer.renderTemplate(templateId, selectedText);
-    });
-    
-    // Listen for export requests
-    this.previewRenderer.onExportRequest((templateId, selectedText) => {
-      // Export as image
-      this.imageExporter.exportAsImage(templateId, selectedText);
-    });
+    if (this.selectedText) {
+      // 可以触发浮窗显示或其他操作
+      this.showFloatingButton();
+    }
+  }
+
+  getSelectedText() {
+    // 获取当前选择的文字
+    return window.getSelection().toString().trim();
+  }
+
+  showFloatingButton() {
+    // 显示浮动按钮的逻辑
+    // 将在floating-button组件中具体实现
+  }
+
+  destroy() {
+    // 销毁内容脚本，清理事件监听器
+    document.removeEventListener('mouseup', this.handleTextSelection);
+    this.isInitialized = false;
   }
 }
+
+// 初始化扩展
+const text2Social = new Text2SocialContent();

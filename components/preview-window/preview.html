@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Text2Social Preview</title>
+  <link rel="stylesheet" href="preview.css">
+  <link rel="stylesheet" href="template-selector/selector.css">
+</head>
+<body>
+  <div id="text2social-preview-container" class="preview-container">
+    <!-- 标题栏 -->
+    <div class="preview-header">
+      <h2>标题栏</h2>
+    </div>
+    
+    <!-- 模板选择区域 -->
+    <div class="template-selector-container">
+      <div id="text2social-template-selector" class="template-selector">
+        <div class="template-options">
+          <!-- 模板选项将通过JavaScript动态生成 -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- 预览区域 -->
+    <div class="preview-content">
+      <div class="preview-placeholder">
+        <div class="placeholder-text">预览区域</div>
+      </div>
+    </div>
+    
+    <!-- 操作按钮 -->
+    <div class="preview-actions">
+      <button id="text2social-export-btn" class="export-btn">复制为图片</button>
+    </div>
+  </div>
+
+  <script src="../utils/constants.js"></script>
+  <script src="template-selector/selector.js"></script>
+  <script src="preview.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+/* preview-window/preview.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  background-color: #FFFFFF;
+  color: #333333;
+}
+
+.preview-container {
+  width: 393px;
+  height: 725px;
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 标题栏 */
+.preview-header {
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+.preview-header h2 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333333;
+}
+
+/* 模板选择区域 */
+.template-selector-container {
+  padding: 16px 20px;
+}
+
+/* 预览区域 */
+.preview-content {
+  flex: 1;
+  padding: 0 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-placeholder {
+  width: 100%;
+  height: 300px;
+  border: 1px solid #E0E0E0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-placeholder::before,
+.preview-placeholder::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background-color: #DDDDDD;
+}
+
+.preview-placeholder::before {
+  transform: rotate(45deg);
+}
+
+.preview-placeholder::after {
+  transform: rotate(-45deg);
+}
+
+.placeholder-text {
+  color: #999999;
+  font-size: 14px;
+  font-weight: 300;
+  z-index: 1;
+}
+
+/* 操作按钮 */
+.preview-actions {
+  padding: 20px;
+  border-top: 1px solid #E0E0E0;
+}
+
+.export-btn {
+  width: 100%;
+  height: 48px;
+  background-color: #4285F4;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.export-btn:hover {
+  background-color: #3367D6;
+}
+
+.export-btn:active {
+  background-color: #2E5BBF;
+}
+
+.export-btn:disabled {
+  background-color: #CCCCCC;
+  opacity: 0.6;
+  cursor: not-allowed;
+}

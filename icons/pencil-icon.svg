@@ -1,0 +1,10 @@
+<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  <!-- 铅笔主体 -->
+  <rect x="6" y="2" width="8" height="12" fill="#FFD700" transform="rotate(45 10 8)"/>
+  <!-- 铅笔尖端 -->
+  <polygon points="10,2 8,6 12,6" fill="#FFA500" transform="rotate(45 10 8)"/>
+  <!-- 铅笔橡皮 -->
+  <rect x="6" y="12" width="8" height="3" fill="#FF6B6B" transform="rotate(45 10 8)"/>
+  <!-- 铅笔金属环 -->
+  <rect x="6" y="11" width="8" height="1" fill="#C0C0C0" transform="rotate(45 10 8)"/>
+</svg>

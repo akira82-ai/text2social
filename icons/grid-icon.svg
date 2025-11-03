@@ -1,0 +1,17 @@
+<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  <!-- 彩色网格图标 -->
+  <!-- 第一行 -->
+  <rect x="2" y="2" width="4" height="4" fill="#FF6B6B"/>
+  <rect x="8" y="2" width="4" height="4" fill="#4ECDC4"/>
+  <rect x="14" y="2" width="4" height="4" fill="#45B7D1"/>
+  
+  <!-- 第二行 -->
+  <rect x="2" y="8" width="4" height="4" fill="#FFA07A"/>
+  <rect x="8" y="8" width="4" height="4" fill="#98D8C8"/>
+  <rect x="14" y="8" width="4" height="4" fill="#6C5CE7"/>
+  
+  <!-- 第三行 -->
+  <rect x="2" y="14" width="4" height="4" fill="#FFD93D"/>
+  <rect x="8" y="14" width="4" height="4" fill="#6BCB77"/>
+  <rect x="14" y="14" width="4" height="4" fill="#4D96FF"/>
+</svg>

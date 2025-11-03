@@ -1,0 +1,71 @@
+/* preview-window/template-selector/selector.css */
+.template-selector {
+  width: 100%;
+}
+
+.template-options {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 10px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.template-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 22%;
+}
+
+.template-option:hover {
+  background-color: rgba(66, 133, 244, 0.04);
+}
+
+.template-option.selected {
+  background-color: transparent;
+}
+
+.template-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #E0F0FF;
+  border-radius: 4px;
+  position: relative;
+  font-size: 14px;
+  color: #333333;
+}
+
+.template-icon::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #FF0000;
+  border-radius: 50%;
+  display: none;
+}
+
+.template-option.selected .template-icon::before {
+  display: block;
+}
+
+.template-name {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  line-height: 20px;
+  text-align: center;
+}
