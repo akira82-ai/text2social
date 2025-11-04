@@ -233,6 +233,17 @@ class PreviewWindow {
     const iframeBody = iframe.contentDocument.body;
     const iframeHtml = iframe.contentDocument.documentElement;
     
+    // 为iframe内容添加左右10%、上下3%的padding
+    const iframeWidth = parseInt(iframe.style.width);
+    const iframeHeight = parseInt(iframe.style.height);
+    const horizontalPadding = iframeWidth * 0.10; // 10%的左右padding
+    const verticalPadding = iframeHeight * 0.03; // 3%的上下padding
+    
+    iframeBody.style.paddingLeft = `${horizontalPadding}px`;
+    iframeBody.style.paddingRight = `${horizontalPadding}px`;
+    iframeBody.style.paddingTop = `${verticalPadding}px`;
+    iframeBody.style.paddingBottom = `${verticalPadding}px`;
+    
     // 应用缩放
     iframeBody.style.transform = `scale(${scale})`;
     iframeBody.style.transformOrigin = 'top left';
@@ -247,7 +258,6 @@ class PreviewWindow {
     // 设置body和html的margin为0，防止额外空间
     iframeBody.style.margin = '0';
     iframeHtml.style.margin = '0';
-    iframeBody.style.padding = '0';
     iframeHtml.style.padding = '0';
     
     // 确保内容不会溢出

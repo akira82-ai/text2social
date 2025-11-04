@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Text2Social",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "将选中的文字转换为精美的社交媒体图片",
   "permissions": [
     "activeTab"
