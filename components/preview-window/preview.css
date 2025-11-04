@@ -113,3 +113,7 @@ body {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.export-btn:disabled:hover {
+  background-color: #CCCCCC;
+}
