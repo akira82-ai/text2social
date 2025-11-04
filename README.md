@@ -2,7 +2,7 @@
 
 ## 📋 项目简介
 
-Text2Social 是一个浏览器插件，允许用户选中网页文字，通过浮动按钮快速生成精美的社交分享图片，支持多种模板和实时预览。
+Text2Social 是一个浏览器插件，允许用户选中网页文字，快速生成精美的社交分享图片，支持多种模板和实时预览。
 
 ## 🏗️ 项目架构
 
@@ -13,11 +13,6 @@ text2social/
 ├── background.js                         # 后台脚本
 │
 ├── components/                           # 组件化模块
-│   ├── floating-button/                  # 浮动按钮组件
-│   │   ├── button.js                     # 按钮逻辑和交互
-│   │   ├── button.html                   # 按钮HTML结构
-│   │   └── button.css                    # 按钮样式
-│   │
 │   ├── preview-window/                   # 预览窗口组件
 │   │   ├── preview.js                    # 预览窗口主逻辑
 │   │   ├── preview.html                  # 预览窗口HTML结构
@@ -72,22 +67,12 @@ text2social/
 
 ## 📦 组件说明
 
-### 1. 浮动按钮组件 (`floating-button/`)
-- 监听文字选择事件
-- 智能定位，避免超出屏幕边界
-- 响应式设计，移动端自适应
-
-### 2. 预览窗口组件 (`preview-window/`)
+### 1. 预览窗口组件 (`preview-window/`)
 - 使用Shadow DOM完全隔离样式
 - 支持ESC键和点击遮罩关闭
 - 包含编辑、预览、操作三个区域
 
-### 3. 模板选择器 (`template-selector/`)
-- 标签式模板切换
-- 键盘导航支持
-- 实时模板预览
-
-### 4. 工具函数库 (`utils/`)
+### 3. 工具函数库 (`utils/`)
 - **DOMLoader**: 统一的资源加载器
 - **TemplateRenderer**: 模板渲染引擎
 - **ImageExporter**: 图片导出工具

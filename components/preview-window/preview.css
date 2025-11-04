@@ -25,28 +25,38 @@ body {
 
 /* 标题栏 */
 .preview-header {
-  padding: 14px;
+  padding: 10px;
   text-align: center;
 }
 
 .preview-header h2 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   color: #333333;
 }
 
 /* 模板选择区域 */
 .template-selector-container {
-  padding: 11px 14px;
+  padding: 8px 10px;
 }
 
 /* 预览区域 */
 .preview-content {
   flex: 1;
-  padding: 0 14px 14px;
+  padding: 2% 3% 3%;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+.preview-content iframe {
+  display: block;
+  transform-origin: top left;
+  overflow: hidden !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
 .preview-placeholder {
@@ -84,7 +94,7 @@ body {
 
 /* 操作按钮 */
 .preview-actions {
-  padding: 14px;
+  padding: 10px;
 }
 
 .export-btn {

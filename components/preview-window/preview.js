@@ -53,16 +53,38 @@ class PreviewWindow {
     }
   }
 
-  displayTemplate(htmlContent) {
+  async displayTemplate(htmlContent) {
     const previewContent = document.querySelector('.preview-content');
     if (!previewContent) return;
 
-    // 创建iframe来显示模板内容
+    // 获取预览内容区域的实际可用尺寸
+    const contentRect = previewContent.getBoundingClientRect();
+    let availableWidth = contentRect.width;
+    let availableHeight = contentRect.height;
+
+    // 先测量模板尺寸以确定最佳适配策略
+    const templateSize = await this.measureTemplateSize(htmlContent);
+    if (!templateSize) return;
+
+    // 智能适配：根据模板宽高比调整可用空间
+    const templateRatio = templateSize.width / templateSize.height;
+    const availableRatio = availableWidth / availableHeight;
+    
+    // 如果是正方形或接近正方形的模板，稍微调整可用空间以获得更好的显示效果
+    if (Math.abs(templateRatio - 1) < 0.2) {
+      // 对于正方形模板，使用较小的边作为基准，确保正方形显示
+      const squareSize = Math.min(availableWidth, availableHeight);
+      availableWidth = squareSize;
+      availableHeight = squareSize;
+    }
+
+    // 创建iframe来显示模板内容，设置为可用空间的100%
     const iframe = document.createElement('iframe');
-    iframe.style.width = '100%';
-    iframe.style.height = '300px';
+    iframe.style.width = availableWidth + 'px';
+    iframe.style.height = availableHeight + 'px';
     iframe.style.border = '1px solid #E0E0E0';
     iframe.style.borderRadius = '4px';
+    iframe.style.overflow = 'hidden';
 
     // 替换预览区域的内容
     previewContent.innerHTML = '';
@@ -73,6 +95,18 @@ class PreviewWindow {
     iframeDoc.open();
     iframeDoc.write(htmlContent);
     iframeDoc.close();
+
+    // 等待内容加载完成
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // 应用缩放
+    const scale = this.calculateBestFitScale(
+      templateSize.width, 
+      templateSize.height,
+      availableWidth,
+      availableHeight
+    );
+    this.applyContentScaling(iframe, scale);
   }
 
   showError(message) {
@@ -126,6 +160,99 @@ class PreviewWindow {
     result = result.replace(/{{text}}/g, data.text || '请选择文本');
     
     return result;
+  }
+
+  async measureTemplateSize(htmlContent) {
+    // 创建隐藏的临时iframe用于测量模板原始尺寸
+    const tempIframe = document.createElement('iframe');
+    tempIframe.style.position = 'absolute';
+    tempIframe.style.left = '-9999px';
+    tempIframe.style.width = '1080px';
+    tempIframe.style.height = '1080px';
+    tempIframe.style.border = 'none';
+    tempIframe.style.visibility = 'hidden';
+    document.body.appendChild(tempIframe);
+
+    try {
+      // 写入模板内容
+      const tempDoc = tempIframe.contentDocument || tempIframe.contentWindow.document;
+      tempDoc.open();
+      tempDoc.write(htmlContent);
+      tempDoc.close();
+
+      // 等待内容加载完成
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // 获取内容的实际尺寸
+      const body = tempIframe.contentDocument.body;
+      const html = tempIframe.contentDocument.documentElement;
+      
+      const width = Math.max(
+        body.scrollWidth,
+        body.offsetWidth,
+        html.clientWidth,
+        html.scrollWidth,
+        html.offsetWidth
+      );
+      
+      const height = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      );
+
+      return { width, height };
+    } finally {
+      // 清理临时iframe
+      if (document.body.contains(tempIframe)) {
+        document.body.removeChild(tempIframe);
+      }
+    }
+  }
+
+  calculateBestFitScale(templateWidth, templateHeight, availableWidth, availableHeight) {
+    // 计算宽度和高度的缩放比例
+    const widthScale = availableWidth / templateWidth;
+    const heightScale = availableHeight / templateHeight;
+    
+    // 取较小的缩放比例，确保内容完整显示
+    let scale = Math.min(widthScale, heightScale);
+    
+    // 设置最小缩放比例，避免内容过小无法识别
+    const minScale = 0.15;
+    if (scale < minScale) {
+      scale = minScale;
+    }
+    
+    return scale;
+  }
+
+  applyContentScaling(iframe, scale) {
+    const iframeBody = iframe.contentDocument.body;
+    const iframeHtml = iframe.contentDocument.documentElement;
+    
+    // 应用缩放
+    iframeBody.style.transform = `scale(${scale})`;
+    iframeBody.style.transformOrigin = 'top left';
+    iframeBody.style.width = `${100 / scale}%`;
+    iframeBody.style.height = `${100 / scale}%`;
+    
+    // 确保无滚动条
+    iframe.style.overflow = 'hidden';
+    iframeBody.style.overflow = 'hidden';
+    iframeHtml.style.overflow = 'hidden';
+    
+    // 设置body和html的margin为0，防止额外空间
+    iframeBody.style.margin = '0';
+    iframeHtml.style.margin = '0';
+    iframeBody.style.padding = '0';
+    iframeHtml.style.padding = '0';
+    
+    // 确保内容不会溢出
+    iframeBody.style.boxSizing = 'border-box';
+    iframeHtml.style.boxSizing = 'border-box';
   }
 
   async exportImage() {
