@@ -36,8 +36,16 @@ class PreviewWindow {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       
-      const htmlContent = await response.text();
+      let htmlContent = await response.text();
       console.log('模板加载成功，内容长度:', htmlContent.length);
+      
+      // 获取文本数据并替换占位符
+      const textData = await this.getTextData();
+      if (textData) {
+        htmlContent = this.replacePlaceholders(htmlContent, textData);
+        console.log('占位符替换完成');
+      }
+      
       this.displayTemplate(htmlContent);
     } catch (error) {
       console.error('加载模板内容失败:', error);
@@ -85,6 +93,39 @@ class PreviewWindow {
         ${message}
       </div>
     `;
+  }
+
+  async getTextData() {
+    // 从background script获取文本数据
+    return new Promise((resolve) => {
+      if (chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({
+          action: 'getTextData'
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error('获取文本数据失败:', chrome.runtime.lastError);
+            resolve(null);
+          } else {
+            resolve(response.success ? response.data : null);
+          }
+        });
+      } else {
+        resolve(null);
+      }
+    });
+  }
+
+  replacePlaceholders(template, data) {
+    // 替换模板中的占位符
+    let result = template;
+    
+    // 替换 {{title}} 占位符
+    result = result.replace(/{{title}}/g, data.title || '无标题');
+    
+    // 替换 {{text}} 占位符
+    result = result.replace(/{{text}}/g, data.text || '请选择文本');
+    
+    return result;
   }
 
   exportImage() {

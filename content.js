@@ -24,8 +24,16 @@ class Text2SocialContent {
     this.selectedText = this.getSelectedText();
     
     if (this.selectedText) {
-      // 可以触发浮窗显示或其他操作
-      this.showFloatingButton();
+      // 文字选择完成，获取页面标题并发送数据
+      const pageTitle = document.title || '无标题';
+      console.log('选中的文字:', this.selectedText);
+      console.log('页面标题:', pageTitle);
+      
+      // 发送数据到background script
+      this.sendDataToBackground({
+        text: this.selectedText,
+        title: pageTitle
+      });
     }
   }
 
@@ -34,11 +42,23 @@ class Text2SocialContent {
     return window.getSelection().toString().trim();
   }
 
-  showFloatingButton() {
-    // 显示浮动按钮的逻辑
-    // 将在floating-button组件中具体实现
+  sendDataToBackground(data) {
+    // 发送数据到background script
+    if (chrome.runtime && chrome.runtime.sendMessage) {
+      chrome.runtime.sendMessage({
+        action: 'updateTextData',
+        data: data
+      }, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error('发送消息失败:', chrome.runtime.lastError);
+        } else {
+          console.log('数据发送成功:', response);
+        }
+      });
+    }
   }
 
+  
   destroy() {
     // 销毁内容脚本，清理事件监听器
     document.removeEventListener('mouseup', this.handleTextSelection);

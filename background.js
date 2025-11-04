@@ -3,6 +3,10 @@
 
 class Text2SocialBackground {
   constructor() {
+    this.textData = {
+      text: '',
+      title: ''
+    };
     this.init();
   }
 
@@ -15,6 +19,7 @@ class Text2SocialBackground {
     // 注册扩展事件监听器
     chrome.runtime.onInstalled.addListener(this.onExtensionInstalled.bind(this));
     chrome.action.onClicked.addListener(this.onActionButtonClick.bind(this));
+    chrome.runtime.onMessage.addListener(this.handleMessage.bind(this));
   }
 
   onExtensionInstalled(details) {
@@ -41,7 +46,16 @@ class Text2SocialBackground {
 
   handleMessage(request, sender, sendResponse) {
     // 处理来自其他脚本的消息
-    return true;
+    if (request.action === 'updateTextData') {
+      // 更新存储的文本数据
+      this.textData = request.data;
+      console.log('文本数据已更新:', this.textData);
+      sendResponse({ success: true, message: '数据已更新' });
+    } else if (request.action === 'getTextData') {
+      // 返回存储的文本数据
+      sendResponse({ success: true, data: this.textData });
+    }
+    return true; // 保持消息通道开放以支持异步响应
   }
 }
 
