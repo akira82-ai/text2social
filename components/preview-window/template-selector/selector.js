@@ -24,22 +24,22 @@ class TemplateSelector {
 
   async loadTemplates() {
     try {
-      // 扫描templates目录下的所有HTML文件
-      const templateFiles = [
-        { name: '模板 1.html', path: '../../templates/模板 1.html' },
-        { name: '模板 2.html', path: '../../templates/模板 2.html' },
-        { name: '模板 3.html', path: '../../templates/模板 3.html' },
-        { name: '模板 4.html', path: '../../templates/模板 4.html' }
-      ];
-
-      this.templates = templateFiles.map((file, index) => ({
+      // 动态扫描templates目录下的所有HTML文件
+      const basePath = Text2SocialConstants.TEMPLATE_RELATIVE_PATH;
+      const existingTemplates = await this.scanTemplateDirectory(basePath);
+      
+      this.templates = existingTemplates.map((file, index) => ({
         id: `template${index + 1}`,
         name: file.name.replace('.html', ''),
-        icon: '图标',
+        icon: this.getTemplateIcon(index),
         path: file.path
       }));
+      
+      console.log(`实际找到 ${this.templates.length} 个模板文件`);
     } catch (error) {
       console.error('加载模板失败:', error);
+      // 如果动态扫描失败，使用默认模板作为备用
+      this.templates = this.getDefaultTemplates();
     }
   }
 

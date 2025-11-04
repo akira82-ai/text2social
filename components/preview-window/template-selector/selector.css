@@ -6,7 +6,7 @@
 .template-options {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: flex-start;
   gap: 7px;
   border: 2px solid transparent;
   border-radius: 6px;
@@ -50,7 +50,7 @@
   content: '';
   position: absolute;
   top: 2px;
-  left: 2px;
+  right: 2px;
   width: 4px;
   height: 4px;
   background-color: #FF0000;
