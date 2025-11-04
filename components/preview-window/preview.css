@@ -12,12 +12,12 @@ body {
 }
 
 .preview-container {
-  width: 393px;
-  height: 725px;
+  width: 275px;
+  height: 540px;
   background-color: #FFFFFF;
   border: 1px solid #E0E0E0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -25,26 +25,25 @@ body {
 
 /* 标题栏 */
 .preview-header {
-  padding: 20px;
+  padding: 14px;
   text-align: center;
-  border-bottom: 1px solid #E0E0E0;
 }
 
 .preview-header h2 {
-  font-size: 18px;
+  font-size: 13px;
   font-weight: 500;
   color: #333333;
 }
 
 /* 模板选择区域 */
 .template-selector-container {
-  padding: 16px 20px;
+  padding: 11px 14px;
 }
 
 /* 预览区域 */
 .preview-content {
   flex: 1;
-  padding: 0 20px 20px;
+  padding: 0 14px 14px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,8 +51,7 @@ body {
 
 .preview-placeholder {
   width: 100%;
-  height: 300px;
-  border: 1px solid #E0E0E0;
+  height: 240px;
   position: relative;
   display: flex;
   align-items: center;
@@ -79,25 +77,24 @@ body {
 
 .placeholder-text {
   color: #999999;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 300;
   z-index: 1;
 }
 
 /* 操作按钮 */
 .preview-actions {
-  padding: 20px;
-  border-top: 1px solid #E0E0E0;
+  padding: 14px;
 }
 
 .export-btn {
   width: 100%;
-  height: 48px;
+  height: 34px;
   background-color: #4285F4;
   color: #FFFFFF;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;

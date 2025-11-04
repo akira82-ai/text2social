@@ -7,9 +7,9 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  gap: 10px;
+  gap: 7px;
   border: 2px solid transparent;
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
 }
 
@@ -17,7 +17,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 12px 8px;
+  padding: 8px 6px;
   cursor: pointer;
   transition: background-color 0.2s ease;
   width: 22%;
@@ -32,17 +32,17 @@
 }
 
 .template-icon {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 8px;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 6px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #E0F0FF;
-  border-radius: 4px;
+  border-radius: 3px;
   position: relative;
-  font-size: 14px;
+  font-size: 10px;
   color: #333333;
 }
 
@@ -51,8 +51,8 @@
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
   background-color: #FF0000;
   border-radius: 50%;
   display: none;
@@ -63,9 +63,9 @@
 }
 
 .template-name {
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 400;
   color: #333333;
-  line-height: 20px;
+  line-height: 14px;
   text-align: center;
 }
