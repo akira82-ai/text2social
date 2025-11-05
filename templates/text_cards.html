@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>精美文字卡片设计</title>
+    <style>
+        /*
+         * ====================================================================
+         * 字体内嵌说明 (Font Embedding Instructions)
+         * ====================================================================
+         *
+         * 1. 由于网络问题，我未能为您自动下载并内嵌字体。
+         * 2. 当前卡片使用的是系统默认中文字体，效果可能因设备而异。
+         * 3. 如果您希望使用特定的字体（如思源黑体），请按照以下步骤操作：
+         *    a. 获取您想要的字体文件（推荐 WOFF2 格式，体积小）。
+         *    b. 将字体文件转换为 Base64 编码字符串。
+         *    c. 将 Base64 字符串粘贴到下面的 `url(...)` 中。
+         *
+         * 示例 (以思源黑体为例):
+         * @font-face {
+         *     font-family: 'Custom Chinese Font';
+         *     src: url(data:font/woff2;base64, [此处粘贴您的Base64编码]) format('woff2');
+         *     font-weight: normal;
+         *     font-style: normal;
+         * }
+         *
+         * 然后将所有卡片的 font-family 改为 'Custom Chinese Font', sans-serif;
+         */
+
+        :root {
+            --color-primary: #333;
+            --color-secondary: #666;
+            --color-background: #f4f4f9;
+            --color-card-bg: #ffffff;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            line-height: 1.8;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin: 0;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--color-card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-medium);
+            box-sizing: border-box;
+        }
+
+        /* ====================================================================
+         * 卡片设计 1: 经典文章摘录卡 (Inspired by the first image)
+         * 特点: 极简、高对比度、强调引用、侧边装饰线
+         * ====================================================================
+         */
+        .card-quote {
+            border-left: 6px solid #4a90e2; /* 蓝色强调线 */
+            padding-left: 30px;
+            font-size: 18px;
+            font-weight: 400;
+            color: #2c3e50;
+        }
+
+        .card-quote p {
+            margin: 0 0 1.5em 0;
+            text-indent: 2em; /* 段落首行缩进 */
+        }
+
+        .card-quote .source {
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #95a5a6;
+            text-align: right;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 10px;
+        }
+
+        /* ====================================================================
+         * 卡片设计 2: 社交媒体风格卡 (Inspired by the second image)
+         * 特点: 拟物化、头像、圆角、清晰的列表结构
+         * ====================================================================
+         */
+        .card-social {
+            padding: 25px;
+            background-color: #ffffff;
+            border: 1px solid #e1e8ed;
+            border-radius: 18px;
+            box-shadow: var(--shadow-light);
+        }
+
+        .card-social .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-social .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #bdc3c7; /* 占位符颜色 */
+            margin-right: 15px;
+            flex-shrink: 0;
+            /* 模拟一个简单的头像图标 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .card-social .user-info strong {
+            display: block;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .card-social .user-info span {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .card-social .content h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #34495e;
+            margin: 0 0 15px 0;
+        }
+
+        .card-social .content ol {
+            padding-left: 20px;
+            margin: 0;
+            list-style-type: none; /* 移除默认数字 */
+            counter-reset: item;
+        }
+
+        .card-social .content ol li {
+            margin-bottom: 15px;
+            font-size: 16px;
+            position: relative;
+            padding-left: 30px; /* 为自定义数字留出空间 */
+        }
+
+        .card-social .content ol li::before {
+            content: counter(item) ".";
+            counter-increment: item;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: bold;
+            color: #4a90e2; /* 蓝色数字 */
+        }
+
+        /* ====================================================================
+         * 卡片设计 3: 优雅标题卡 (Elegant Title Card)
+         * 特点: 居中、强调标题、柔和背景
+         * ====================================================================
+         */
+        .card-elegant {
+            text-align: center;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e8f0 100%); /* 柔和渐变背景 */
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-elegant .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e3a8a; /* 深蓝色标题 */
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-elegant .subtitle {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .card-elegant .text-body {
+            font-size: 18px;
+            color: #374151;
+            font-weight: 500;
+            padding: 0 10px;
+        }
+
+        .card-elegant .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #9ca3af;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ====================================================================
+         * 卡片设计 4: 极简主义卡 (Minimalist Card)
+         * 特点: 纯白背景、无边框、大字号、居中、留白
+         * ====================================================================
+         */
+        .card-minimalist {
+            max-width: 450px; /* 略窄，增加留白感 */
+            padding: 50px 40px;
+            background-color: #ffffff;
+            box-shadow: none; /* 移除阴影 */
+            border: 1px solid #e0e0e0; /* 极细边框 */
+            text-align: center;
+        }
+
+        .card-minimalist .quote-icon {
+            font-size: 48px;
+            color: #cccccc;
+            line-height: 1;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card-minimalist .text-content {
+            font-size: 24px; /* 放大字体 */
+            font-weight: 300; /* 细字体 */
+            color: #222222;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .card-minimalist .author {
+            font-size: 16px;
+            color: #777777;
+            font-style: italic;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            display: inline-block; /* 宽度自适应 */
+        }
+
+        /* ====================================================================
+         * 卡片设计 5: 深色模式卡 (Dark Mode Card)
+         * 特点: 深色背景，高对比度，现代感
+         * ====================================================================
+         */
+        .card-dark {
+            background-color: #1e272e;
+            color: #ecf0f1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-dark .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a90e2; /* 蓝色高亮标题 */
+            margin-bottom: 15px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 10px;
+        }
+
+        .card-dark .card-content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #bdc3c7;
+        }
+
+        /* ====================================================================
+         * 卡片设计 6: 渐变高亮卡 (Gradient Highlight Card)
+         * 特点: 标题下划线渐变，柔和圆角
+         * ====================================================================
+         */
+        .card-gradient {
+            border-radius: 25px;
+            border: 1px solid #f0f0f0;
+            box-shadow: var(--shadow-light);
+        }
+
+        .card-gradient .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .card-gradient .card-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            border-radius: 2px;
+        }
+
+        .card-gradient .card-content {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--color-secondary);
+        }
+
+        /* ====================================================================
+         * 卡片设计 7: 复古终端卡 (Retro Terminal Card)
+         * 特点: 科技感，等宽字体，模拟命令行
+         * ====================================================================
+         */
+        .card-terminal {
+            background-color: #000000;
+            color: #00ff00;
+            font-family: 'Monospace', 'Courier New', monospace;
+            border-radius: 4px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            line-height: 1.4;
+        }
+
+        .card-terminal .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #00ff00;
+            padding-bottom: 5px;
+        }
+
+        .card-terminal .card-content {
+            font-size: 16px;
+            white-space: pre-wrap;
+        }
+
+        /* ====================================================================
+         * 卡片设计 8: 艺术留白卡 (Artistic White Space Card)
+         * 特点: 极大的留白，轻盈的字体，强调文字本身
+         * ====================================================================
+         */
+        .card-whitespace {
+            max-width: 500px;
+            padding: 60px 40px;
+            background-color: #fcfcfc;
+            box-shadow: none;
+            border: none;
+            text-align: left;
+        }
+
+        .card-whitespace .card-title {
+            font-size: 32px;
+            font-weight: 200; /* 极细字体 */
+            color: #333;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .card-whitespace .card-content {
+            font-size: 18px;
+            font-weight: 400;
+            color: #555;
+            line-height: 2.0; /* 增加行高 */
+            text-indent: 2em;
+        }
+
+        /* ====================================================================
+         * 卡片设计 9: 标签分类卡 (Tag Categorization Card)
+         * 特点: 顶部彩色标签，信息分类明确
+         * ====================================================================
+         */
+        .card-tag {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .card-tag .tag-header {
+            background-color: #e74c3c; /* 红色标签背景 */
+            color: white;
+            padding: 15px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-tag .content-body {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .card-tag .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card-tag .card-content {
+            font-size: 16px;
+            color: #7f8c8d;
+            line-height: 1.7;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 卡片 1: 经典文章摘录卡 -->
+    <div class="card-container card-quote">
+        <p>
+            {{text}}
+        </p>
+        <span class="source">-- {{title}}</span>
+    </div>
+
+    <!-- 卡片 2: 社交媒体风格卡 -->
+    <div class="card-container card-social">
+        <div class="header">
+            <div class="avatar">A</div>
+            <div class="user-info">
+                <strong>Andrej Karpathy</strong>
+                <span>@karpathy</span>
+            </div>
+        </div>
+        <div class="content">
+            <h3>{{title}}</h3>
+            <p>
+               {{text}}
+            </p>
+        </div>
+    </div>
+
+    <!-- 卡片 3: 优雅标题卡 -->
+
+    <!-- 卡片 4: 极简主义卡 -->
+    <div class="card-container card-minimalist">
+        <span class="quote-icon">“</span>
+        <div class="text-content">
+            {{text}}
+        </div>
+        <span class="author">-- {{title}}</span>
+    </div>
+
+    <!-- 卡片 5: 深色模式卡 -->
+    <div class="card-container card-dark">
+        <div class="card-title">
+            {{title}}
+        </div>
+        <div class="card-content">
+            {{text}}
+        </div>
+    </div>
+
+    <!-- 卡片 6: 渐变高亮卡 -->
+    <div class="card-container card-gradient">
+        <div class="card-title">
+            {{title}}
+        </div>
+        <div class="card-content">
+            {{text}}
+        </div>
+    </div>
+
+    <!-- 卡片 7: 复古终端卡 -->
+    <div class="card-container card-terminal">
+        <div class="card-title">
+            > {{title}}
+        </div>
+        <div class="card-content">
+{{text}}
+        </div>
+    </div>
+
+    <!-- 卡片 8: 艺术留白卡 -->
+    <div class="card-container card-whitespace">
+        <div class="card-title">
+            {{title}}
+        </div>
+        <div class="card-content">
+            {{text}}
+        </div>
+    </div>
+
+    <!-- 卡片 9: 标签分类卡 -->
+    <div class="card-container card-tag">
+        <div class="tag-header">
+          	{{title}}
+        </div>
+        <div class="content-body">
+            <div class="card-title">
+                ///
+            </div>
+            <div class="card-content">
+                {{text}}
+            </div>
+        </div>
+    </div>
+
+    <!-- 原卡片 3: 优雅标题卡 (保留) -->
+    <div class="card-container card-elegant">
+        <div class="title">
+            {{title}}
+        </div>
+        <div class="subtitle">
+            Three Truths of Life
+        </div>
+        <div class="text-body">
+            <p>
+               {{text}}
+            </p>
+        </div>
+        <div class="footer">
+            Manus Design
+        </div>
+    </div>
+
+</body>
+</html>

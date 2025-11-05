@@ -47,7 +47,8 @@ class TemplateSelector {
     // 模板文件列表（由于浏览器安全限制，这里使用预定义的模板配置）
     const knownTemplates = [
       { name: '模板 1.html', path: basePath + '模板 1.html' },
-      { name: '模板 2.html', path: basePath + '模板 2.html' }
+      { name: '模板 2.html', path: basePath + '模板 2.html' },
+      { name: 'text_cards.html', path: basePath + 'text_cards.html' }
     ];
 
     // 尝试检查每个模板文件是否存在
@@ -96,6 +97,12 @@ class TemplateSelector {
         name: '模板 2',
         color: '#FFF0E0',
         path: basePath + '模板 2.html'
+      },
+      {
+        id: 'template3',
+        name: '文字卡片',
+        color: '#F0E0FF',
+        path: basePath + 'text_cards.html'
       }
     ];
   }
