@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>经典文章摘录卡</title>
+    <title>社交媒体风格卡</title>
     <style>
         /*
          * ====================================================================
@@ -48,7 +48,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             box-sizing: border-box;
         }
 
@@ -63,43 +62,82 @@
         }
 
         /* ====================================================================
-         * 卡片设计 1: 经典文章摘录卡 (Inspired by the first image)
-         * 特点: 极简、高对比度、强调引用、侧边装饰线
+         * 卡片设计 2: 社交媒体风格卡 (Inspired by the second image)
+         * 特点: 拟物化、头像、圆角、清晰的列表结构
          * ====================================================================
          */
-        .card-quote {
-            border-left: 6px solid #4a90e2; /* 蓝色强调线 */
-            padding-left: 30px;
-            font-size: 18px;
-            font-weight: 400;
-            color: #2c3e50;
+        .card-social {
+            padding: 25px;
+            background-color: #ffffff;
+            border: 1px solid #e1e8ed;
+            border-radius: 18px;
+            box-shadow: var(--shadow-light);
         }
 
-        .card-quote p {
-            margin: 0 0 1.5em 0;
-            text-indent: 2em; /* 段落首行缩进 */
+        .card-social .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        .card-quote .source {
+        .card-social .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #bdc3c7; /* 占位符颜色 */
+            margin-right: 15px;
+            flex-shrink: 0;
+            /* 模拟一个简单的头像图标 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .card-social .user-info strong {
             display: block;
-            margin-top: 20px;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+
+        .card-social .user-info span {
+            color: #777;
             font-size: 14px;
-            color: #95a5a6;
-            text-align: right;
-            border-top: 1px solid #ecf0f1;
-            padding-top: 10px;
+        }
+
+        .card-social .content h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #34495e;
+            margin: 0 0 15px 0;
+        }
+
+        .card-social .content p {
+            font-size: 16px;
+            margin: 0;
+            line-height: 1.6;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 1: 经典文章摘录卡 -->
-    <div class="card-container card-quote">
-        <p>
-            {{text}}
-        </p>
-        <span class="source">-- {{title}}</span>
+    <!-- 卡片 2: 社交媒体风格卡 -->
+    <div class="card-container card-social">
+        <div class="header">
+            <div class="avatar">A</div>
+            <div class="user-info">
+                <strong>Andrej Karpathy</strong>
+                <span>@karpathy</span>
+            </div>
+        </div>
+        <div class="content">
+            <h3>{{title}}</h3>
+            <p>
+               {{text}}
+            </p>
+        </div>
     </div>
 
 </body>

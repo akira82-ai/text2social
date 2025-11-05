@@ -43,12 +43,12 @@
             background-color: var(--color-background);
             color: var(--color-primary);
             line-height: 1.8;
+            margin: 0;
             padding: 40px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 40px;
-            margin: 0;
+            box-sizing: border-box;
         }
 
         .card-container {
@@ -100,13 +100,15 @@
             color: #7f8c8d;
             line-height: 1.7;
         }
+
     </style>
 </head>
 <body>
+
     <!-- 卡片 9: 标签分类卡 -->
     <div class="card-container card-tag">
         <div class="tag-header">
-          	{{title}}
+         	{{title}}
         </div>
         <div class="content-body">
             <div class="card-title">
@@ -117,5 +119,6 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>

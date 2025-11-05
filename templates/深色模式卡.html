@@ -43,12 +43,13 @@
             background-color: var(--color-background);
             color: var(--color-primary);
             line-height: 1.8;
+            margin: 0;
             padding: 40px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 40px;
-            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .card-container {
@@ -86,9 +87,11 @@
             line-height: 1.7;
             color: #bdc3c7;
         }
+
     </style>
 </head>
 <body>
+
     <!-- 卡片 5: 深色模式卡 -->
     <div class="card-container card-dark">
         <div class="card-title">
@@ -98,5 +101,6 @@
             {{text}}
         </div>
     </div>
+
 </body>
 </html>

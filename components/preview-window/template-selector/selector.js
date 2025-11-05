@@ -44,13 +44,14 @@ class TemplateSelector {
   }
 
   async scanTemplateDirectory(basePath) {
-    // 模板文件列表（8个中文命名的模板）
+    // 模板文件列表（9个中文命名的模板，包括所有实际存在的文件）
     const knownTemplates = [
       { name: '标签分类卡.html', path: basePath + '标签分类卡.html' },
       { name: '复古终端卡.html', path: basePath + '复古终端卡.html' },
       { name: '极简主义卡.html', path: basePath + '极简主义卡.html' },
       { name: '渐变高亮卡.html', path: basePath + '渐变高亮卡.html' },
       { name: '经典文章摘录卡.html', path: basePath + '经典文章摘录卡.html' },
+      { name: '社交媒体风格卡.html', path: basePath + '社交媒体风格卡.html' },
       { name: '深色模式卡.html', path: basePath + '深色模式卡.html' },
       { name: '艺术留白卡.html', path: basePath + '艺术留白卡.html' },
       { name: '优雅标题卡.html', path: basePath + '优雅标题卡.html' }
@@ -88,7 +89,7 @@ class TemplateSelector {
   }
 
   getDefaultTemplates() {
-    // 默认模板配置（备用方案）- 8个中文模板
+    // 默认模板配置（备用方案）- 9个中文模板
     const basePath = Text2SocialConstants.TEMPLATE_RELATIVE_PATH;
     return [
       {
@@ -123,20 +124,26 @@ class TemplateSelector {
       },
       {
         id: 'template6',
+        name: '社交媒体风格卡',
+        color: '#FFE8E0',
+        path: basePath + '社交媒体风格卡.html'
+      },
+      {
+        id: 'template7',
         name: '深色模式卡',
         color: '#F0FFE0',
         path: basePath + '深色模式卡.html'
       },
       {
-        id: 'template7',
+        id: 'template8',
         name: '艺术留白卡',
         color: '#E0FFFF',
         path: basePath + '艺术留白卡.html'
       },
       {
-        id: 'template8',
+        id: 'template9',
         name: '优雅标题卡',
-        color: '#FFE8E0',
+        color: '#F0FFF0',
         path: basePath + '优雅标题卡.html'
       }
     ];

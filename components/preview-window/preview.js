@@ -57,56 +57,152 @@ class PreviewWindow {
     const previewContent = document.querySelector('.preview-content');
     if (!previewContent) return;
 
+    console.log('开始显示模板，原始HTML长度:', htmlContent.length);
+
+    // 显示生成中状态
+    this.showLoadingState(previewContent);
+
+    try {
+      // 获取文本数据并替换占位符
+      const textData = await this.getTextData();
+      if (textData) {
+        htmlContent = this.replacePlaceholders(htmlContent, textData);
+        console.log('占位符替换完成，处理后HTML长度:', htmlContent.length);
+      }
+
+      // 创建临时iframe用于渲染（避免样式冲突）
+      const tempIframe = document.createElement('iframe');
+      tempIframe.style.position = 'absolute';
+      tempIframe.style.left = '-9999px';
+      tempIframe.style.width = '600px'; // 设置一个合理的初始宽度
+      tempIframe.style.height = '400px'; // 设置一个合理的初始高度
+      tempIframe.style.border = 'none';
+      tempIframe.style.visibility = 'hidden';
+      tempIframe.style.overflow = 'hidden';
+      document.body.appendChild(tempIframe);
+
+      // 等待iframe创建完成
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // 写入模板内容到iframe
+      const tempDoc = tempIframe.contentDocument;
+      tempDoc.open();
+      tempDoc.write(htmlContent);
+      tempDoc.close();
+
+      // 等待内容加载完成
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // 获取iframe内部的实际内容尺寸
+      const iframeBody = tempIframe.contentDocument.body;
+      const iframeHtml = tempIframe.contentDocument.documentElement;
+      
+      // 清除默认样式
+      iframeBody.style.margin = '0';
+      iframeBody.style.padding = '0';
+      iframeHtml.style.margin = '0';
+      iframeHtml.style.padding = '0';
+
+      // 直接使用模板中设置的body尺寸，而不是计算内容尺寸
+      const computedStyle = tempIframe.contentWindow.getComputedStyle(iframeBody);
+      const templateWidth = parseInt(computedStyle.width) || 500;
+      const templateHeight = iframeBody.scrollHeight;
+
+      console.log('模板尺寸:', { width: templateWidth, height: templateHeight });
+
+      // 调整iframe尺寸以匹配模板尺寸
+      tempIframe.style.width = templateWidth + 'px';
+      tempIframe.style.height = templateHeight + 'px';
+
+      // 等待尺寸调整完成
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      // 使用html2canvas渲染iframe内容
+      console.log('开始使用html2canvas渲染...');
+      const canvas = await html2canvas(iframeBody, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        width: templateWidth,
+        height: templateHeight,
+        windowWidth: templateWidth,
+        windowHeight: templateHeight
+      });
+
+      console.log('html2canvas渲染完成，画布尺寸:', { width: canvas.width, height: canvas.height });
+
+      // 清理临时iframe
+      document.body.removeChild(tempIframe);
+
+      // 将渲染结果显示在预览区域
+      this.displayRenderedImage(previewContent, canvas);
+
+    } catch (error) {
+      console.error('渲染失败:', error);
+      this.showError(previewContent, `渲染失败: ${error.message}`);
+    }
+  }
+
+  showLoadingState(previewContent) {
+    previewContent.innerHTML = `
+      <div class="loading-state" style="
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 300px;
+        color: #666666;
+        font-size: 16px;
+        border: 1px solid #E0E0E0;
+        border-radius: 4px;
+        background-color: #FAFAFA;
+      ">
+        <div style="text-align: center;">
+          <div style="
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E0E0E0;
+            border-top: 3px solid #4A90E2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+          "></div>
+          生成中...
+        </div>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    `;
+  }
+
+  displayRenderedImage(previewContent, canvas) {
+    // 将canvas转换为图片URL
+    const imageUrl = canvas.toDataURL('image/png');
+    
     // 获取预览内容区域的实际可用尺寸
     const contentRect = previewContent.getBoundingClientRect();
-    let availableWidth = contentRect.width;
-    let availableHeight = contentRect.height;
+    const availableWidth = contentRect.width;
+    const availableHeight = contentRect.height;
 
-    // 先测量模板尺寸以确定最佳适配策略
-    const templateSize = await this.measureTemplateSize(htmlContent);
-    if (!templateSize) return;
+    // 创建图片元素
+    const img = document.createElement('img');
+    img.src = imageUrl;
+    img.style.maxWidth = '100%';
+    img.style.maxHeight = '100%';
+    img.style.objectFit = 'contain';
+    img.style.border = '1px solid #E0E0E0';
+    img.style.borderRadius = '4px';
 
-    // 智能适配：根据模板宽高比调整可用空间
-    const templateRatio = templateSize.width / templateSize.height;
-    const availableRatio = availableWidth / availableHeight;
-    
-    // 如果是正方形或接近正方形的模板，稍微调整可用空间以获得更好的显示效果
-    if (Math.abs(templateRatio - 1) < 0.2) {
-      // 对于正方形模板，使用较小的边作为基准，确保正方形显示
-      const squareSize = Math.min(availableWidth, availableHeight);
-      availableWidth = squareSize;
-      availableHeight = squareSize;
-    }
-
-    // 创建iframe来显示模板内容，设置为可用空间的100%
-    const iframe = document.createElement('iframe');
-    iframe.style.width = availableWidth + 'px';
-    iframe.style.height = availableHeight + 'px';
-    iframe.style.border = '1px solid #E0E0E0';
-    iframe.style.borderRadius = '4px';
-    iframe.style.overflow = 'hidden';
-
-    // 替换预览区域的内容
+    // 清空预览区域并添加图片
     previewContent.innerHTML = '';
-    previewContent.appendChild(iframe);
+    previewContent.appendChild(img);
 
-    // 将HTML内容写入iframe
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(htmlContent);
-    iframeDoc.close();
-
-    // 等待内容加载完成
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // 应用缩放
-    const scale = this.calculateBestFitScale(
-      templateSize.width, 
-      templateSize.height,
-      availableWidth,
-      availableHeight
-    );
-    this.applyContentScaling(iframe, scale);
+    // 保存canvas引用供导出使用
+    this.currentCanvas = canvas;
   }
 
   showError(message) {
@@ -216,17 +312,14 @@ class PreviewWindow {
   }
 
   calculateBestFitScale(templateWidth, templateHeight, availableWidth, availableHeight) {
-    // 计算宽度和高度的缩放比例
-    const widthScale = availableWidth / templateWidth;
-    const heightScale = availableHeight / templateHeight;
+    // 基于宽度计算缩放比例，确保模板宽度填满预览区域
+    const scale = availableWidth / templateWidth;
     
-    // 取较小的缩放比例，确保内容完整显示
-    let scale = Math.min(widthScale, heightScale);
-    
-    // 设置最小缩放比例，避免内容过小无法识别
-    const minScale = 0.15;
-    if (scale < minScale) {
-      scale = minScale;
+    // 检查缩放后的高度是否超出预览区域
+    const scaledHeight = templateHeight * scale;
+    if (scaledHeight > availableHeight) {
+      // 如果高度超出，则基于高度重新计算
+      return availableHeight / templateHeight;
     }
     
     return scale;
@@ -236,11 +329,11 @@ class PreviewWindow {
     const iframeBody = iframe.contentDocument.body;
     const iframeHtml = iframe.contentDocument.documentElement;
     
-    // 为iframe内容添加左右10%、上下3%的padding
+    // 为iframe内容添加左右5%、上下1%的padding
     const iframeWidth = parseInt(iframe.style.width);
     const iframeHeight = parseInt(iframe.style.height);
-    const horizontalPadding = iframeWidth * 0.10; // 10%的左右padding
-    const verticalPadding = iframeHeight * 0.03; // 3%的上下padding
+    const horizontalPadding = iframeWidth * 0.05; // 5%的左右padding
+    const verticalPadding = iframeHeight * 0.01; // 1%的上下padding
     
     iframeBody.style.paddingLeft = `${horizontalPadding}px`;
     iframeBody.style.paddingRight = `${horizontalPadding}px`;
@@ -269,94 +362,25 @@ class PreviewWindow {
   }
 
   async exportImage() {
-    // 检查当前是否有加载的模板
-    if (!this.currentTemplate) {
-      alert('模板加载中，请稍后再试');
-      return;
-    }
-
-    // 获取预览iframe
-    const previewIframe = document.querySelector('.preview-content iframe');
-    if (!previewIframe) {
-      alert('请等待模板加载完成');
+    // 检查当前是否有渲染完成的图片
+    if (!this.currentCanvas) {
+      alert('请等待图片生成完成');
       return;
     }
 
     // 设置按钮为加载状态
     const exportBtn = document.getElementById('text2social-export-btn');
     const originalText = exportBtn.textContent;
-    exportBtn.textContent = '导出中...';
+    exportBtn.textContent = '复制中...';
     exportBtn.disabled = true;
 
     try {
-      // 创建临时iframe用于导出
-      const tempIframe = document.createElement('iframe');
-      tempIframe.style.position = 'absolute';
-      tempIframe.style.left = '-9999px';
-      tempIframe.style.width = '1080px';
-      tempIframe.style.height = '1080px';
-      tempIframe.style.border = 'none';
-      tempIframe.style.backgroundColor = '#ffffff';
-      document.body.appendChild(tempIframe);
-
-      // 等待iframe创建完成
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      // 获取处理后的模板内容
-      const textData = await this.getTextData();
-      if (!textData) {
-        throw new Error('无法获取文本数据');
-      }
-
-      // 重新加载模板内容并替换占位符
-      const response = await fetch(this.currentTemplate.path);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
+      // 直接使用已渲染的canvas
+      console.log('开始复制图片到剪贴板...');
       
-      let htmlContent = await response.text();
-      htmlContent = this.replacePlaceholders(htmlContent, textData);
-
-      // 写入模板内容到临时iframe
-      const tempDoc = tempIframe.contentDocument;
-      tempDoc.open();
-      tempDoc.write(htmlContent);
-      tempDoc.close();
-
-      // 等待内容加载完成
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // 获取内容的实际高度
-      const body = tempIframe.contentDocument.body;
-      const html = tempIframe.contentDocument.documentElement;
-      const contentHeight = Math.max(
-        body.scrollHeight,
-        body.offsetHeight,
-        html.clientHeight,
-        html.scrollHeight,
-        html.offsetHeight
-      );
-
-      // 设置iframe高度以适应内容
-      tempIframe.style.height = contentHeight + 'px';
-
-      // 等待iframe调整高度
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      // 使用html2canvas截图
-      const canvas = await html2canvas(tempIframe.contentDocument.body, {
-        backgroundColor: '#ffffff',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        width: 1080,
-        height: contentHeight,
-        windowWidth: 1080,
-        windowHeight: contentHeight
-      });
-
-      // 复制到剪贴板
-      canvas.toBlob(blob => {
+      // 将canvas转换为blob并复制到剪贴板
+      this.currentCanvas.toBlob(blob => {
+        console.log('图片blob生成成功，大小:', blob.size);
         const item = new ClipboardItem({ 'image/png': blob });
         navigator.clipboard.write([item]).then(() => {
           alert('图片已复制到剪贴板！');
@@ -367,14 +391,12 @@ class PreviewWindow {
           // 恢复按钮状态
           exportBtn.textContent = originalText;
           exportBtn.disabled = false;
-          // 清理临时iframe
-          document.body.removeChild(tempIframe);
         });
       });
 
     } catch (error) {
       console.error('导出失败:', error);
-      alert('导出失败，请重试');
+      alert('导出失败: ' + error.message);
       // 恢复按钮状态
       exportBtn.textContent = originalText;
       exportBtn.disabled = false;

@@ -43,12 +43,13 @@
             background-color: var(--color-background);
             color: var(--color-primary);
             line-height: 1.8;
+            margin: 0;
             padding: 40px;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 40px;
-            margin: 0;
+            min-height: 100vh;
+            box-sizing: border-box;
         }
 
         .card-container {
@@ -89,9 +90,11 @@
             font-size: 16px;
             white-space: pre-wrap;
         }
+
     </style>
 </head>
 <body>
+
     <!-- 卡片 7: 复古终端卡 -->
     <div class="card-container card-terminal">
         <div class="card-title">
@@ -101,5 +104,6 @@
 {{text}}
         </div>
     </div>
+
 </body>
 </html>

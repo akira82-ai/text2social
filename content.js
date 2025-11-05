@@ -44,17 +44,32 @@ class Text2SocialContent {
 
   sendDataToBackground(data) {
     // 发送数据到background script
-    if (chrome.runtime && chrome.runtime.sendMessage) {
-      chrome.runtime.sendMessage({
-        action: 'updateTextData',
-        data: data
-      }, (response) => {
-        if (chrome.runtime.lastError) {
-          console.error('发送消息失败:', chrome.runtime.lastError);
-        } else {
-          console.log('数据发送成功:', response);
-        }
-      });
+    try {
+      if (chrome.runtime && chrome.runtime.sendMessage) {
+        chrome.runtime.sendMessage({
+          action: 'updateTextData',
+          data: data
+        }, (response) => {
+          if (chrome.runtime.lastError) {
+            // 检查是否是扩展上下文失效错误
+            if (chrome.runtime.lastError.message.includes('Extension context invalidated')) {
+              console.warn('扩展上下文已失效，可能是扩展重新加载或更新');
+            } else {
+              console.error('发送消息失败:', chrome.runtime.lastError);
+            }
+          } else {
+            console.log('数据发送成功:', response);
+          }
+        });
+      } else {
+        console.warn('Chrome runtime 不可用');
+      }
+    } catch (error) {
+      if (error.message.includes('Extension context invalidated')) {
+        console.warn('扩展上下文已失效，可能是扩展重新加载或更新');
+      } else {
+        console.error('发送消息时发生错误:', error);
+      }
     }
   }
 
