@@ -31,7 +31,7 @@ class TemplateSelector {
       this.templates = existingTemplates.map((file, index) => ({
         id: `template${index + 1}`,
         name: file.name.replace('.html', ''),
-        icon: this.getTemplateIcon(index),
+        color: this.getTemplateColor(index),
         path: file.path
       }));
       
@@ -66,10 +66,19 @@ class TemplateSelector {
     return existingTemplates;
   }
 
-  getTemplateIcon(index) {
-    // 为不同模板分配不同的图标
-    const icons = ['✏️', '📱', '🎨', '💡', '📷', '🌟', '🎯', '🔥'];
-    return icons[index % icons.length];
+  getTemplateColor(index) {
+    // 为不同模板分配不同的背景色
+    const colors = [
+      '#E0F0FF', // 浅蓝色
+      '#FFF0E0', // 浅橙色
+      '#F0E0FF', // 浅紫色
+      '#E0FFE0', // 浅绿色
+      '#FFE0F0', // 浅粉色
+      '#F0FFE0', // 浅黄绿色
+      '#E0FFFF', // 浅青色
+      '#FFE8E0'  // 浅红色
+    ];
+    return colors[index % colors.length];
   }
 
   getDefaultTemplates() {
@@ -79,13 +88,13 @@ class TemplateSelector {
       {
         id: 'template1',
         name: '模板 1',
-        icon: '✏️',
+        color: '#E0F0FF',
         path: basePath + '模板 1.html'
       },
       {
         id: 'template2',
         name: '模板 2',
-        icon: '📱',
+        color: '#FFF0E0',
         path: basePath + '模板 2.html'
       }
     ];
@@ -99,10 +108,7 @@ class TemplateSelector {
     this.templates.forEach((template, index) => {
       const isSelected = index === 0 ? 'selected' : '';
       optionsHTML += `
-        <div class="template-option ${isSelected}" data-template-id="${template.id}">
-          <div class="template-icon">
-            ${template.icon}
-          </div>
+        <div class="template-option ${isSelected}" data-template-id="${template.id}" style="background-color: ${template.color};">
           <div class="template-name">${template.name}</div>
         </div>
       `;

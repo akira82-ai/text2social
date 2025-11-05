@@ -43,11 +43,12 @@ body {
 /* 预览区域 */
 .preview-content {
   flex: 1;
-  padding: 2% 8% 3%;
+  padding: 2% 12% 3%;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   overflow: hidden;
+  border: 1px solid #FF0000;
 }
 
 .preview-content iframe {
