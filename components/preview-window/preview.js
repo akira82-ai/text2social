@@ -155,7 +155,7 @@ class PreviewWindow {
         font-size: 16px;
         border: 1px solid #E0E0E0;
         border-radius: 4px;
-        background-color: #FAFAFA;
+        background-color: transparent;
       ">
         <div style="text-align: center;">
           <div style="
@@ -266,10 +266,11 @@ class PreviewWindow {
     const tempIframe = document.createElement('iframe');
     tempIframe.style.position = 'absolute';
     tempIframe.style.left = '-9999px';
-    tempIframe.style.width = '1080px';
-    tempIframe.style.height = '1080px';
+    tempIframe.style.width = '108px';
+    tempIframe.style.height = '108px';
     tempIframe.style.border = 'none';
     tempIframe.style.visibility = 'hidden';
+    tempIframe.style.backgroundColor = 'transparent';
     document.body.appendChild(tempIframe);
 
     try {
