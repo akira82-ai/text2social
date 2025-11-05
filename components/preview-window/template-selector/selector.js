@@ -44,11 +44,16 @@ class TemplateSelector {
   }
 
   async scanTemplateDirectory(basePath) {
-    // 模板文件列表（由于浏览器安全限制，这里使用预定义的模板配置）
+    // 模板文件列表（8个中文命名的模板）
     const knownTemplates = [
-      { name: '模板 1.html', path: basePath + '模板 1.html' },
-      { name: '模板 2.html', path: basePath + '模板 2.html' },
-      { name: 'text_cards.html', path: basePath + 'text_cards.html' }
+      { name: '标签分类卡.html', path: basePath + '标签分类卡.html' },
+      { name: '复古终端卡.html', path: basePath + '复古终端卡.html' },
+      { name: '极简主义卡.html', path: basePath + '极简主义卡.html' },
+      { name: '渐变高亮卡.html', path: basePath + '渐变高亮卡.html' },
+      { name: '经典文章摘录卡.html', path: basePath + '经典文章摘录卡.html' },
+      { name: '深色模式卡.html', path: basePath + '深色模式卡.html' },
+      { name: '艺术留白卡.html', path: basePath + '艺术留白卡.html' },
+      { name: '优雅标题卡.html', path: basePath + '优雅标题卡.html' }
     ];
 
     // 尝试检查每个模板文件是否存在
@@ -83,26 +88,56 @@ class TemplateSelector {
   }
 
   getDefaultTemplates() {
-    // 默认模板配置（备用方案）
+    // 默认模板配置（备用方案）- 8个中文模板
     const basePath = Text2SocialConstants.TEMPLATE_RELATIVE_PATH;
     return [
       {
         id: 'template1',
-        name: '模板 1',
+        name: '标签分类卡',
         color: '#E0F0FF',
-        path: basePath + '模板 1.html'
+        path: basePath + '标签分类卡.html'
       },
       {
         id: 'template2',
-        name: '模板 2',
+        name: '复古终端卡',
         color: '#FFF0E0',
-        path: basePath + '模板 2.html'
+        path: basePath + '复古终端卡.html'
       },
       {
         id: 'template3',
-        name: '文字卡片',
+        name: '极简主义卡',
         color: '#F0E0FF',
-        path: basePath + 'text_cards.html'
+        path: basePath + '极简主义卡.html'
+      },
+      {
+        id: 'template4',
+        name: '渐变高亮卡',
+        color: '#E0FFE0',
+        path: basePath + '渐变高亮卡.html'
+      },
+      {
+        id: 'template5',
+        name: '经典文章摘录卡',
+        color: '#FFE0F0',
+        path: basePath + '经典文章摘录卡.html'
+      },
+      {
+        id: 'template6',
+        name: '深色模式卡',
+        color: '#F0FFE0',
+        path: basePath + '深色模式卡.html'
+      },
+      {
+        id: 'template7',
+        name: '艺术留白卡',
+        color: '#E0FFFF',
+        path: basePath + '艺术留白卡.html'
+      },
+      {
+        id: 'template8',
+        name: '优雅标题卡',
+        color: '#FFE8E0',
+        path: basePath + '优雅标题卡.html'
       }
     ];
   }

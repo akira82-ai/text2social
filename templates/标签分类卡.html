@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>标签分类卡</title>
+    <style>
+        /*
+         * ====================================================================
+         * 字体内嵌说明 (Font Embedding Instructions)
+         * ====================================================================
+         *
+         * 1. 由于网络问题，我未能为您自动下载并内嵌字体。
+         * 2. 当前卡片使用的是系统默认中文字体，效果可能因设备而异。
+         * 3. 如果您希望使用特定的字体（如思源黑体），请按照以下步骤操作：
+         *    a. 获取您想要的字体文件（推荐 WOFF2 格式，体积小）。
+         *    b. 将字体文件转换为 Base64 编码字符串。
+         *    c. 将 Base64 字符串粘贴到下面的 `url(...)` 中。
+         *
+         * 示例 (以思源黑体为例):
+         * @font-face {
+         *     font-family: 'Custom Chinese Font';
+         *     src: url(data:font/woff2;base64, [此处粘贴您的Base64编码]) format('woff2');
+         *     font-weight: normal;
+         *     font-style: normal;
+         * }
+         *
+         * 然后将所有卡片的 font-family 改为 'Custom Chinese Font', sans-serif;
+         */
+
+        :root {
+            --color-primary: #333;
+            --color-secondary: #666;
+            --color-background: #f4f4f9;
+            --color-card-bg: #ffffff;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            line-height: 1.8;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin: 0;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--color-card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-medium);
+            box-sizing: border-box;
+        }
+
+        /* ====================================================================
+         * 卡片设计 9: 标签分类卡 (Tag Categorization Card)
+         * 特点: 顶部彩色标签，信息分类明确
+         * ====================================================================
+         */
+        .card-tag {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .card-tag .tag-header {
+            background-color: #e74c3c; /* 红色标签背景 */
+            color: white;
+            padding: 15px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-tag .content-body {
+            padding: 30px;
+            background-color: white;
+        }
+
+        .card-tag .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card-tag .card-content {
+            font-size: 16px;
+            color: #7f8c8d;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <!-- 卡片 9: 标签分类卡 -->
+    <div class="card-container card-tag">
+        <div class="tag-header">
+          	{{title}}
+        </div>
+        <div class="content-body">
+            <div class="card-title">
+                ///
+            </div>
+            <div class="card-content">
+                {{text}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

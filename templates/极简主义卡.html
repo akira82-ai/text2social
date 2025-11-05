@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简主义卡</title>
+    <style>
+        /*
+         * ====================================================================
+         * 字体内嵌说明 (Font Embedding Instructions)
+         * ====================================================================
+         *
+         * 1. 由于网络问题，我未能为您自动下载并内嵌字体。
+         * 2. 当前卡片使用的是系统默认中文字体，效果可能因设备而异。
+         * 3. 如果您希望使用特定的字体（如思源黑体），请按照以下步骤操作：
+         *    a. 获取您想要的字体文件（推荐 WOFF2 格式，体积小）。
+         *    b. 将字体文件转换为 Base64 编码字符串。
+         *    c. 将 Base64 字符串粘贴到下面的 `url(...)` 中。
+         *
+         * 示例 (以思源黑体为例):
+         * @font-face {
+         *     font-family: 'Custom Chinese Font';
+         *     src: url(data:font/woff2;base64, [此处粘贴您的Base64编码]) format('woff2');
+         *     font-weight: normal;
+         *     font-style: normal;
+         * }
+         *
+         * 然后将所有卡片的 font-family 改为 'Custom Chinese Font', sans-serif;
+         */
+
+        :root {
+            --color-primary: #333;
+            --color-secondary: #666;
+            --color-background: #f4f4f9;
+            --color-card-bg: #ffffff;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            line-height: 1.8;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            margin: 0;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--color-card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-medium);
+            box-sizing: border-box;
+        }
+
+        /* ====================================================================
+         * 卡片设计 4: 极简主义卡 (Minimalist Card)
+         * 特点: 纯白背景、无边框、大字号、居中、留白
+         * ====================================================================
+         */
+        .card-minimalist {
+            max-width: 450px; /* 略窄，增加留白感 */
+            padding: 50px 40px;
+            background-color: #ffffff;
+            box-shadow: none; /* 移除阴影 */
+            border: 1px solid #e0e0e0; /* 极细边框 */
+            text-align: center;
+        }
+
+        .card-minimalist .quote-icon {
+            font-size: 48px;
+            color: #cccccc;
+            line-height: 1;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .card-minimalist .text-content {
+            font-size: 24px; /* 放大字体 */
+            font-weight: 300; /* 细字体 */
+            color: #222222;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .card-minimalist .author {
+            font-size: 16px;
+            color: #777777;
+            font-style: italic;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            display: inline-block; /* 宽度自适应 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 卡片 4: 极简主义卡 -->
+    <div class="card-container card-minimalist">
+        <span class="quote-icon">"</span>
+        <div class="text-content">
+            {{text}}
+        </div>
+        <span class="author">-- {{title}}</span>
+    </div>
+</body>
+</html>
