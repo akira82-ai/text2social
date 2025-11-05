@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>换行符功能测试</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #4285F4;
+        }
+        .test-text {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        button {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #3367D6;
+        }
+        .result {
+            background-color: #e8f5e8;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+        }
+        .preview {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>换行符保留功能测试</h1>
+    
+    <div class="test-section">
+        <h2>测试说明</h2>
+        <p>此页面用于测试 Text2Social 扩展是否能正确保留选中文本的换行符。</p>
+        <p>请按照以下步骤进行测试：</p>
+        <ol>
+            <li>选择下方包含换行符的测试文本</li>
+            <li>点击扩展图标打开预览窗口</li>
+            <li>检查预览中是否保留了换行格式</li>
+            <li>导出图片并验证换行是否正确显示</li>
+        </ol>
+    </div>
+
+    <div class="test-section">
+        <h2>测试文本 1：简单换行</h2>
+        <div class="test-text" id="test-text-1">第一行文本
+第二行文本
+第三行文本</div>
+        <button onclick="selectText('test-text-1')">选择此文本</button>
+        <div class="preview" id="preview-1" style="display:none;">
+            <strong>预期效果：</strong><br>
+            第一行文本<br>
+            第二行文本<br>
+            第三行文本
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试文本 2：多行段落</h2>
+        <div class="test-text" id="test-text-2">这是第一段文本，包含多个句子。
+它应该作为一个整体显示。
+
+这是第二段文本。
+这是第三段文本，用来测试多个换行符的处理。</div>
+        <button onclick="selectText('test-text-2')">选择此文本</button>
+        <div class="preview" id="preview-2" style="display:none;">
+            <strong>预期效果：</strong><br>
+            这是第一段文本，包含多个句子。<br>
+            它应该作为一个整体显示。<br>
+            <br>
+            这是第二段文本。<br>
+            这是第三段文本，用来测试多个换行符的处理。
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试文本 3：复杂格式</h2>
+        <div class="test-text" id="test-text-3">标题：功能测试
+
+1. 第一项
+   - 子项目 1
+   - 子项目 2
+
+2. 第二项
+
+3. 第三项
+
+结论：所有换行符都应该被正确保留。</div>
+        <button onclick="selectText('test-text-3')">选择此文本</button>
+        <div class="preview" id="preview-3" style="display:none;">
+            <strong>预期效果：</strong><br>
+            标题：功能测试<br>
+            <br>
+            1. 第一项<br>
+            &nbsp;&nbsp;- 子项目 1<br>
+            &nbsp;&nbsp;- 子项目 2<br>
+            <br>
+            2. 第二项<br>
+            <br>
+            3. 第三项<br>
+            <br>
+            结论：所有换行符都应该被正确保留。
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>测试结果记录</h2>
+        <div id="test-results">
+            <p>请在测试后记录结果：</p>
+            <textarea id="results" rows="10" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;" placeholder="记录测试结果..."></textarea>
+        </div>
+        <button onclick="saveResults()">保存结果</button>
+        <div id="result-message" class="result"></div>
+    </div>
+
+    <script>
+        function selectText(elementId) {
+            const element = document.getElementById(elementId);
+            const range = document.createRange();
+            range.selectNodeContents(element);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            // 显示预期效果
+            document.getElementById('preview-' + elementId.split('-')[1]).style.display = 'block';
+            
+            // 记录测试操作
+            const results = document.getElementById('results');
+            const timestamp = new Date().toLocaleTimeString();
+            results.value += `[${timestamp}] 选择了测试文本 ${elementId.split('-')[1]}\n`;
+        }
+
+        function saveResults() {
+            const results = document.getElementById('results').value;
+            if (results.trim()) {
+                // 创建日志文件
+                const blob = new Blob([results], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `换行符测试结果_${new Date().toISOString().split('T')[0]}.txt`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                showMessage('测试结果已保存！');
+            } else {
+                showMessage('请先记录测试结果');
+            }
+        }
+
+        function showMessage(message) {
+            const messageDiv = document.getElementById('result-message');
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // 页面加载时的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('换行符功能测试页面已加载');
+            
+            // 检查扩展环境
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                console.log('✓ 扩展环境检测成功');
+            } else {
+                console.log('ℹ 非扩展环境，某些功能可能不可用');
+            }
+        });
+    </script>
+</body>
+</html>

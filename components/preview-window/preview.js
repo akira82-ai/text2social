@@ -156,8 +156,11 @@ class PreviewWindow {
     // 替换 {{title}} 占位符
     result = result.replace(/{{title}}/g, data.title || '无标题');
     
-    // 替换 {{text}} 占位符
-    result = result.replace(/{{text}}/g, data.text || '请选择文本');
+    // 替换 {{text}} 占位符，保留换行符
+    const textContent = data.text || '请选择文本';
+    // 将换行符转换为HTML <br> 标签以保持格式
+    const formattedText = textContent.replace(/\n/g, '<br>');
+    result = result.replace(/{{text}}/g, formattedText);
     
     return result;
   }

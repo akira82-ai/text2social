@@ -38,8 +38,8 @@ class Text2SocialContent {
   }
 
   getSelectedText() {
-    // 获取当前选择的文字
-    return window.getSelection().toString().trim();
+    // 获取当前选择的文字，保留原有格式包括换行符
+    return window.getSelection().toString();
   }
 
   sendDataToBackground(data) {
