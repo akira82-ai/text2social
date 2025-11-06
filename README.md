@@ -33,10 +33,8 @@ Text2Social 是一个优雅的浏览器插件，让您能够轻松选中网页�
 
 ## 🚀 安装方法
 
-### 从Chrome Web Store安装（推荐）
-1. 访问 [Chrome Web Store](https://chrome.google.com/webstore)
-2. 搜索 "Text2Social"
-3. 点击"添加到Chrome"
+### 从Edge Extension Store安装
+（待审核）
 
 ### 开发版安装
 1. 克隆本仓库：
@@ -84,27 +82,6 @@ text2social/
 - **图片生成**: html2canvas
 - **安全处理**: DOMPurify
 - **构建工具**: 无需构建，直接运行
-
-## 🔧 开发指南
-
-### 添加新模板
-1. 在 `templates/` 目录创建新的HTML文件
-2. 使用Mustache语法：
-   ```html
-   <h1>{{title}}</h1>
-   <p>{{text}}</p>
-   ```
-3. 在 `components/utils/constants.js` 中注册模板
-
-### 自定义样式
-所有样式基于CSS变量，可在 `styles/variables.css` 中修改：
-```css
-:root {
-  --primary-color: #4285F4;
-  --border-radius: 6px;
-  --font-family: -apple-system, BlinkMacSystemFont, ...;
-}
-```
 
 ## 🌟 更新日志
 
