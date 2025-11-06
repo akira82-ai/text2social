@@ -50,8 +50,8 @@ class TemplateSelector {
       { name: '复古终端.html', path: basePath + '复古终端.html' },
       { name: '极简主义.html', path: basePath + '极简主义.html' },
       { name: '渐变高亮.html', path: basePath + '渐变高亮.html' },
-      { name: '经典文章摘录.html', path: basePath + '经典文章摘录.html' },
-      { name: '社交媒体风格.html', path: basePath + '社交媒体风格.html' },
+      { name: '文章摘录.html', path: basePath + '文章摘录.html' },
+      { name: '社交媒体.html', path: basePath + '社交媒体.html' },
       { name: '深色模式.html', path: basePath + '深色模式.html' },
       { name: '艺术留白.html', path: basePath + '艺术留白.html' },
       { name: '优雅标题.html', path: basePath + '优雅标题.html' }
@@ -118,15 +118,15 @@ class TemplateSelector {
       },
       {
         id: 'template5',
-        name: '经典文章摘录',
+        name: '文章摘录',
         color: '#FFE0F0',
-        path: basePath + '经典文章摘录.html'
+        path: basePath + '文章摘录.html'
       },
       {
         id: 'template6',
-        name: '社交媒体风格',
+        name: '社交媒体',
         color: '#FFE8E0',
-        path: basePath + '社交媒体风格.html'
+        path: basePath + '社交媒体.html'
       },
       {
         id: 'template7',
