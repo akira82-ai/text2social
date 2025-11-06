@@ -121,24 +121,6 @@ text2social/
 - 🔧 修复模板文件名不匹配问题
 - ✅ 确保所有9个模板正确加载
 
-[查看完整更新日志](CHANGELOG.md)
-
-## 🤝 贡献指南
-
-我们欢迎各种形式的贡献！
-
-1. **Fork** 本项目
-2. 创建特性分支: `git checkout -b feature/AmazingFeature`
-3. 提交更改: `git commit -m 'Add some AmazingFeature'`
-4. 推送分支: `git push origin feature/AmazingFeature`
-5. 发起 **Pull Request**
-
-### 贡献类型
-- 🐛 Bug修复
-- ✨ 新功能开发
-- 📝 文档改进
-- 🎨 UI/UX优化
-- 🌐 国际化支持
 
 ## 📝 许可证
 
@@ -150,13 +132,11 @@ text2social/
 - [Mustache.js](https://mustache.github.io/) - 轻量级模板引擎
 - [DOMPurify](https://github.com/cure53/DOMPurify) - HTML安全清理工具
 
-## 📞 联系我们
+## 📞 联系我
 
 - 📧 Email: [akira82@qq.com](mailto:akira82@qq.com)
 - 💬 微信: data_growth
 - 🐦 Twitter: [@AgiRay1015](https://x.com/AgiRay1015)
-- 🐛 问题反馈: [GitHub Issues](https://github.com/akira82-ai/text2social/issues)
-- 💬 功能建议: [GitHub Discussions](https://github.com/akira82-ai/text2social/discussions)
 
 ---
 

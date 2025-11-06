@@ -3,3 +3,6 @@ test-extension.html
 test-functionality.html
 TESTING_GUIDE.md
 .DS_Store
+.DS_Store
+assets/.DS_Store
+components/.DS_Store
