@@ -44,7 +44,7 @@ class TemplateSelector {
   }
 
   async scanTemplateDirectory(basePath) {
-    // 模板文件列表（9个中文命名的模板，包括所有实际存在的文件）
+    // 模板文件列表（8个中文命名的模板，包括所有实际存在的文件）
     const knownTemplates = [
       { name: '标签分类.html', path: basePath + '标签分类.html' },
       { name: '复古终端.html', path: basePath + '复古终端.html' },
@@ -53,8 +53,7 @@ class TemplateSelector {
       { name: '文章摘录.html', path: basePath + '文章摘录.html' },
       { name: '社交媒体.html', path: basePath + '社交媒体.html' },
       { name: '深色模式.html', path: basePath + '深色模式.html' },
-      { name: '艺术留白.html', path: basePath + '艺术留白.html' },
-      { name: '优雅标题.html', path: basePath + '优雅标题.html' }
+      { name: '艺术留白.html', path: basePath + '艺术留白.html' }
     ];
 
     // 尝试检查每个模板文件是否存在
@@ -89,7 +88,7 @@ class TemplateSelector {
   }
 
   getDefaultTemplates() {
-    // 默认模板配置（备用方案）- 9个中文模板
+    // 默认模板配置（备用方案）- 8个中文模板
     const basePath = Text2SocialConstants.TEMPLATE_RELATIVE_PATH;
     return [
       {
@@ -139,12 +138,6 @@ class TemplateSelector {
         name: '艺术留白',
         color: '#E0FFFF',
         path: basePath + '艺术留白.html'
-      },
-      {
-        id: 'template9',
-        name: '优雅标题',
-        color: '#F0FFF0',
-        path: basePath + '优雅标题.html'
       }
     ];
   }
@@ -158,7 +151,7 @@ class TemplateSelector {
       const isSelected = index === 0 ? 'selected' : '';
       const nameHTML = this.formatTemplateName(template.name);
       optionsHTML += `
-        <div class="template-option ${isSelected}" data-template-id="${template.id}" style="background-color: ${template.color};">
+        <div class="template-option ${isSelected}" data-template-id="${template.id}">
           <div class="template-name">${nameHTML}</div>
         </div>
       `;
