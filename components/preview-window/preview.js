@@ -153,8 +153,6 @@ class PreviewWindow {
         height: 300px;
         color: #666666;
         font-size: 16px;
-        border: 1px solid #E0E0E0;
-        border-radius: 4px;
         background-color: transparent;
       ">
         <div style="text-align: center;">
