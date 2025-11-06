@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>极简主义卡</title>
+    <title>标签分类</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,55 +39,62 @@
         }
 
         /* ====================================================================
-         * 卡片设计 4: 极简主义卡 (Minimalist Card)
-         * 特点: 纯白背景、无边框、大字号、居中、留白
+         * 卡片设计 9: 标签分类 (Tag Categorization)
+         * 特点: 顶部彩色标签，信息分类明确
          * ====================================================================
          */
-        .card-minimalist {
-            max-width: 450px; /* 略窄，增加留白感 */
-            padding: 50px 40px;
-            background-color: #ffffff;
-            box-shadow: none; /* 移除阴影 */
-            border: 1px solid #e0e0e0; /* 极细边框 */
-            text-align: center;
+        .card-tag {
+            padding: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: var(--shadow-medium);
         }
 
-        .card-minimalist .quote-icon {
-            font-size: 48px;
-            color: #cccccc;
-            line-height: 1;
-            margin-bottom: 20px;
-            display: block;
+        .card-tag .tag-header {
+            background-color: #e74c3c; /* 红色标签背景 */
+            color: white;
+            padding: 15px 30px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .card-minimalist .text-content {
-            font-size: 24px; /* 放大字体 */
-            font-weight: 300; /* 细字体 */
-            color: #222222;
-            line-height: 1.6;
-            margin-bottom: 30px;
+        .card-tag .content-body {
+            padding: 30px;
+            background-color: white;
         }
 
-        .card-minimalist .author {
+        .card-tag .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .card-tag .card-content {
             font-size: 16px;
-            color: #777777;
-            font-style: italic;
-            border-top: 1px solid #f0f0f0;
-            padding-top: 15px;
-            display: inline-block; /* 宽度自适应 */
+            color: #7f8c8d;
+            line-height: 1.7;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 4: 极简主义卡 -->
-    <div class="card-container card-minimalist">
-        <span class="quote-icon">"</span>
-        <div class="text-content">
-            {{text}}
+    <!-- 卡片 9: 标签分类 -->
+    <div class="card-container card-tag">
+        <div class="tag-header">
+         	{{title}}
         </div>
-        <span class="author">-- {{title}}</span>
+        <div class="content-body">
+            <div class="card-title">
+                ///
+            </div>
+            <div class="card-content">
+                {{text}}
+            </div>
+        </div>
     </div>
 
 </body>

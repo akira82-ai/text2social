@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>艺术留白卡</title>
+    <title>经典文章摘录</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,47 +39,43 @@
         }
 
         /* ====================================================================
-         * 卡片设计 8: 艺术留白卡 (Artistic White Space Card)
-         * 特点: 极大的留白，轻盈的字体，强调文字本身
+         * 卡片设计 1: 经典文章摘录 (Inspired by the first image)
+         * 特点: 极简、高对比度、强调引用、侧边装饰线
          * ====================================================================
          */
-        .card-whitespace {
-            max-width: 500px;
-            padding: 60px 40px;
-            background-color: #fcfcfc;
-            box-shadow: none;
-            border: none;
-            text-align: left;
-        }
-
-        .card-whitespace .card-title {
-            font-size: 32px;
-            font-weight: 200; /* 极细字体 */
-            color: #333;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-        }
-
-        .card-whitespace .card-content {
+        .card-quote {
+            border-left: 6px solid #4a90e2; /* 蓝色强调线 */
+            padding-left: 30px;
             font-size: 18px;
             font-weight: 400;
-            color: #555;
-            line-height: 2.0; /* 增加行高 */
-            text-indent: 2em;
+            color: #2c3e50;
+        }
+
+        .card-quote p {
+            margin: 0 0 1.5em 0;
+            text-indent: 2em; /* 段落首行缩进 */
+        }
+
+        .card-quote .source {
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #95a5a6;
+            text-align: right;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 10px;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 8: 艺术留白卡 -->
-    <div class="card-container card-whitespace">
-        <div class="card-title">
-            {{title}}
-        </div>
-        <div class="card-content">
+    <!-- 卡片 1: 经典文章摘录 -->
+    <div class="card-container card-quote">
+        <p>
             {{text}}
-        </div>
+        </p>
+        <span class="source">-- {{title}}</span>
     </div>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>深色模式卡</title>
+    <title>极简主义</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,43 +39,55 @@
         }
 
         /* ====================================================================
-         * 卡片设计 5: 深色模式卡 (Dark Mode Card)
-         * 特点: 深色背景，高对比度，现代感
+         * 卡片设计 4: 极简主义 (Minimalist)
+         * 特点: 纯白背景、无边框、大字号、居中、留白
          * ====================================================================
          */
-        .card-dark {
-            background-color: #1e272e;
-            color: #ecf0f1;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        .card-minimalist {
+            max-width: 450px; /* 略窄，增加留白感 */
+            padding: 50px 40px;
+            background-color: #ffffff;
+            box-shadow: none; /* 移除阴影 */
+            border: 1px solid #e0e0e0; /* 极细边框 */
+            text-align: center;
         }
 
-        .card-dark .card-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #4a90e2; /* 蓝色高亮标题 */
-            margin-bottom: 15px;
-            border-bottom: 1px solid #34495e;
-            padding-bottom: 10px;
+        .card-minimalist .quote-icon {
+            font-size: 48px;
+            color: #cccccc;
+            line-height: 1;
+            margin-bottom: 20px;
+            display: block;
         }
 
-        .card-dark .card-content {
+        .card-minimalist .text-content {
+            font-size: 24px; /* 放大字体 */
+            font-weight: 300; /* 细字体 */
+            color: #222222;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .card-minimalist .author {
             font-size: 16px;
-            line-height: 1.7;
-            color: #bdc3c7;
+            color: #777777;
+            font-style: italic;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            display: inline-block; /* 宽度自适应 */
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 5: 深色模式卡 -->
-    <div class="card-container card-dark">
-        <div class="card-title">
-            {{title}}
-        </div>
-        <div class="card-content">
+    <!-- 卡片 4: 极简主义 -->
+    <div class="card-container card-minimalist">
+        <span class="quote-icon">"</span>
+        <div class="text-content">
             {{text}}
         </div>
+        <span class="author">-- {{title}}</span>
     </div>
 
 </body>

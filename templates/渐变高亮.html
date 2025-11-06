@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>优雅标题卡</title>
+    <title>渐变高亮</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,67 +39,53 @@
         }
 
         /* ====================================================================
-         * 卡片设计 3: 优雅标题卡 (Elegant Title Card)
-         * 特点: 居中、强调标题、柔和背景
+         * 卡片设计 6: 渐变高亮 (Gradient Highlight)
+         * 特点: 标题下划线渐变，柔和圆角
          * ====================================================================
          */
-        .card-elegant {
-            text-align: center;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0e8f0 100%); /* 柔和渐变背景 */
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .card-gradient {
+            border-radius: 25px;
+            border: 1px solid #f0f0f0;
+            box-shadow: var(--shadow-light);
         }
 
-        .card-elegant .title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #1e3a8a; /* 深蓝色标题 */
-            margin-bottom: 15px;
-            line-height: 1.4;
+        .card-gradient .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            display: inline-block;
+            position: relative;
         }
 
-        .card-elegant .subtitle {
-            font-size: 16px;
-            color: #4b5563;
-            margin-bottom: 25px;
-            font-style: italic;
+        .card-gradient .card-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            border-radius: 2px;
         }
 
-        .card-elegant .text-body {
-            font-size: 18px;
-            color: #374151;
-            font-weight: 500;
-            padding: 0 10px;
-        }
-
-        .card-elegant .footer {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #9ca3af;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .card-gradient .card-content {
+            font-size: 17px;
+            line-height: 1.8;
+            color: var(--color-secondary);
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 3: 优雅标题卡 -->
-    <div class="card-container card-elegant">
-        <div class="title">
+    <!-- 卡片 6: 渐变高亮 -->
+    <div class="card-container card-gradient">
+        <div class="card-title">
             {{title}}
         </div>
-        <div class="subtitle">
-            Three Truths of Life
-        </div>
-        <div class="text-body">
-            <p>
-               {{text}}
-            </p>
-        </div>
-        <div class="footer">
-            Manus Design
+        <div class="card-content">
+            {{text}}
         </div>
     </div>
 

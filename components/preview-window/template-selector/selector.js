@@ -46,15 +46,15 @@ class TemplateSelector {
   async scanTemplateDirectory(basePath) {
     // 模板文件列表（9个中文命名的模板，包括所有实际存在的文件）
     const knownTemplates = [
-      { name: '标签分类卡.html', path: basePath + '标签分类卡.html' },
-      { name: '复古终端卡.html', path: basePath + '复古终端卡.html' },
-      { name: '极简主义卡.html', path: basePath + '极简主义卡.html' },
-      { name: '渐变高亮卡.html', path: basePath + '渐变高亮卡.html' },
-      { name: '经典文章摘录卡.html', path: basePath + '经典文章摘录卡.html' },
-      { name: '社交媒体风格卡.html', path: basePath + '社交媒体风格卡.html' },
-      { name: '深色模式卡.html', path: basePath + '深色模式卡.html' },
-      { name: '艺术留白卡.html', path: basePath + '艺术留白卡.html' },
-      { name: '优雅标题卡.html', path: basePath + '优雅标题卡.html' }
+      { name: '标签分类.html', path: basePath + '标签分类.html' },
+      { name: '复古终端.html', path: basePath + '复古终端.html' },
+      { name: '极简主义.html', path: basePath + '极简主义.html' },
+      { name: '渐变高亮.html', path: basePath + '渐变高亮.html' },
+      { name: '经典文章摘录.html', path: basePath + '经典文章摘录.html' },
+      { name: '社交媒体风格.html', path: basePath + '社交媒体风格.html' },
+      { name: '深色模式.html', path: basePath + '深色模式.html' },
+      { name: '艺术留白.html', path: basePath + '艺术留白.html' },
+      { name: '优雅标题.html', path: basePath + '优雅标题.html' }
     ];
 
     // 尝试检查每个模板文件是否存在
@@ -94,57 +94,57 @@ class TemplateSelector {
     return [
       {
         id: 'template1',
-        name: '标签分类卡',
+        name: '标签分类',
         color: '#E0F0FF',
-        path: basePath + '标签分类卡.html'
+        path: basePath + '标签分类.html'
       },
       {
         id: 'template2',
-        name: '复古终端卡',
+        name: '复古终端',
         color: '#FFF0E0',
-        path: basePath + '复古终端卡.html'
+        path: basePath + '复古终端.html'
       },
       {
         id: 'template3',
-        name: '极简主义卡',
+        name: '极简主义',
         color: '#F0E0FF',
-        path: basePath + '极简主义卡.html'
+        path: basePath + '极简主义.html'
       },
       {
         id: 'template4',
-        name: '渐变高亮卡',
+        name: '渐变高亮',
         color: '#E0FFE0',
-        path: basePath + '渐变高亮卡.html'
+        path: basePath + '渐变高亮.html'
       },
       {
         id: 'template5',
-        name: '经典文章摘录卡',
+        name: '经典文章摘录',
         color: '#FFE0F0',
-        path: basePath + '经典文章摘录卡.html'
+        path: basePath + '经典文章摘录.html'
       },
       {
         id: 'template6',
-        name: '社交媒体风格卡',
+        name: '社交媒体风格',
         color: '#FFE8E0',
-        path: basePath + '社交媒体风格卡.html'
+        path: basePath + '社交媒体风格.html'
       },
       {
         id: 'template7',
-        name: '深色模式卡',
+        name: '深色模式',
         color: '#F0FFE0',
-        path: basePath + '深色模式卡.html'
+        path: basePath + '深色模式.html'
       },
       {
         id: 'template8',
-        name: '艺术留白卡',
+        name: '艺术留白',
         color: '#E0FFFF',
-        path: basePath + '艺术留白卡.html'
+        path: basePath + '艺术留白.html'
       },
       {
         id: 'template9',
-        name: '优雅标题卡',
+        name: '优雅标题',
         color: '#F0FFF0',
-        path: basePath + '优雅标题卡.html'
+        path: basePath + '优雅标题.html'
       }
     ];
   }
@@ -156,9 +156,10 @@ class TemplateSelector {
     let optionsHTML = '';
     this.templates.forEach((template, index) => {
       const isSelected = index === 0 ? 'selected' : '';
+      const nameHTML = this.formatTemplateName(template.name);
       optionsHTML += `
         <div class="template-option ${isSelected}" data-template-id="${template.id}" style="background-color: ${template.color};">
-          <div class="template-name">${template.name}</div>
+          <div class="template-name">${nameHTML}</div>
         </div>
       `;
     });
@@ -191,5 +192,15 @@ class TemplateSelector {
 
   getSelectedTemplate() {
     return this.selectedTemplate;
+  }
+
+  formatTemplateName(name) {
+    // 如果是四个字的模板名称，拆分为两行显示
+    if (name.length === 4) {
+      const firstLine = name.substring(0, 2);
+      const secondLine = name.substring(2, 4);
+      return `<div class="two-line"><div class="line">${firstLine}</div><div class="line">${secondLine}</div></div>`;
+    }
+    return name;
   }
 }

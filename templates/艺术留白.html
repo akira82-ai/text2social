@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>渐变高亮卡</title>
+    <title>艺术留白</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,48 +39,41 @@
         }
 
         /* ====================================================================
-         * 卡片设计 6: 渐变高亮卡 (Gradient Highlight Card)
-         * 特点: 标题下划线渐变，柔和圆角
+         * 卡片设计 8: 艺术留白 (Artistic White Space)
+         * 特点: 极大的留白，轻盈的字体，强调文字本身
          * ====================================================================
          */
-        .card-gradient {
-            border-radius: 25px;
-            border: 1px solid #f0f0f0;
-            box-shadow: var(--shadow-light);
+        .card-whitespace {
+            max-width: 500px;
+            padding: 60px 40px;
+            background-color: #fcfcfc;
+            box-shadow: none;
+            border: none;
+            text-align: left;
         }
 
-        .card-gradient .card-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--color-primary);
-            margin-bottom: 20px;
-            display: inline-block;
-            position: relative;
+        .card-whitespace .card-title {
+            font-size: 32px;
+            font-weight: 200; /* 极细字体 */
+            color: #333;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
         }
 
-        .card-gradient .card-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -5px;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
-            border-radius: 2px;
-        }
-
-        .card-gradient .card-content {
-            font-size: 17px;
-            line-height: 1.8;
-            color: var(--color-secondary);
+        .card-whitespace .card-content {
+            font-size: 18px;
+            font-weight: 400;
+            color: #555;
+            line-height: 2.0; /* 增加行高 */
+            text-indent: 2em;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 6: 渐变高亮卡 -->
-    <div class="card-container card-gradient">
+    <!-- 卡片 8: 艺术留白 -->
+    <div class="card-container card-whitespace">
         <div class="card-title">
             {{title}}
         </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>复古终端卡</title>
+    <title>深色模式</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,45 +39,42 @@
         }
 
         /* ====================================================================
-         * 卡片设计 7: 复古终端卡 (Retro Terminal Card)
-         * 特点: 科技感，等宽字体，模拟命令行
+         * 卡片设计 5: 深色模式 (Dark Mode)
+         * 特点: 深色背景，高对比度，现代感
          * ====================================================================
          */
-        .card-terminal {
-            background-color: #000000;
-            color: #00ff00;
-            font-family: 'Monospace', 'Courier New', monospace;
-            border-radius: 4px;
-            border: 2px solid #00ff00;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            line-height: 1.4;
+        .card-dark {
+            background-color: #1e272e;
+            color: #ecf0f1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
-        .card-terminal .card-title {
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            border-bottom: 1px dashed #00ff00;
-            padding-bottom: 5px;
+        .card-dark .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a90e2; /* 蓝色高亮标题 */
+            margin-bottom: 15px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 10px;
         }
 
-        .card-terminal .card-content {
+        .card-dark .card-content {
             font-size: 16px;
-            white-space: pre-wrap;
+            line-height: 1.7;
+            color: #bdc3c7;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 7: 复古终端卡 -->
-    <div class="card-container card-terminal">
+    <!-- 卡片 5: 深色模式 -->
+    <div class="card-container card-dark">
         <div class="card-title">
-            > {{title}}
+            {{title}}
         </div>
         <div class="card-content">
-{{text}}
+            {{text}}
         </div>
     </div>
 

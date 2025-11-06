@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>经典文章摘录卡</title>
+    <title>优雅标题</title>
     <style>
         :root {
             --color-primary: #333;
@@ -39,43 +39,68 @@
         }
 
         /* ====================================================================
-         * 卡片设计 1: 经典文章摘录卡 (Inspired by the first image)
-         * 特点: 极简、高对比度、强调引用、侧边装饰线
+         * 卡片设计 3: 优雅标题 (Elegant Title)
+         * 特点: 居中、强调标题、柔和背景
          * ====================================================================
          */
-        .card-quote {
-            border-left: 6px solid #4a90e2; /* 蓝色强调线 */
-            padding-left: 30px;
+        .card-elegant {
+            text-align: center;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e8f0 100%); /* 柔和渐变背景 */
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-elegant .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e3a8a; /* 深蓝色标题 */
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .card-elegant .subtitle {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .card-elegant .text-body {
             font-size: 18px;
-            font-weight: 400;
-            color: #2c3e50;
+            color: #374151;
+            font-weight: 500;
+            padding: 0 10px;
         }
 
-        .card-quote p {
-            margin: 0 0 1.5em 0;
-            text-indent: 2em; /* 段落首行缩进 */
-        }
-
-        .card-quote .source {
-            display: block;
-            margin-top: 20px;
+        .card-elegant .footer {
+            margin-top: 30px;
             font-size: 14px;
-            color: #95a5a6;
-            text-align: right;
-            border-top: 1px solid #ecf0f1;
-            padding-top: 10px;
+            color: #9ca3af;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
     </style>
 </head>
 <body>
 
-    <!-- 卡片 1: 经典文章摘录卡 -->
-    <div class="card-container card-quote">
-        <p>
-            {{text}}
-        </p>
-        <span class="source">-- {{title}}</span>
+    <!-- 卡片 3: 优雅标题 -->
+    <div class="card-container card-elegant">
+        <div class="title">
+            {{title}}
+        </div>
+        <div class="subtitle">
+            Three Truths of Life
+        </div>
+        <div class="text-body">
+            <p>
+               {{text}}
+            </p>
+        </div>
+        <div class="footer">
+            Manus Design
+        </div>
     </div>
 
 </body>
