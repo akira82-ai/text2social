@@ -363,15 +363,18 @@ class PreviewWindow {
   async exportImage() {
     // 检查当前是否有渲染完成的图片
     if (!this.currentCanvas) {
-      alert('请等待图片生成完成');
+      this.showStatus('请等待图片生成完成', 'error');
       return;
     }
 
     // 设置按钮为加载状态
     const exportBtn = document.getElementById('text2social-export-btn');
-    const originalText = exportBtn.textContent;
-    exportBtn.textContent = '复制中...';
-    exportBtn.disabled = true;
+    const btnText = exportBtn.querySelector('.btn-text');
+    
+    this.setLoadingState(exportBtn, btnText);
+
+    // 延迟300ms再执行后续功能
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     try {
       // 直接使用已渲染的canvas
@@ -382,23 +385,91 @@ class PreviewWindow {
         console.log('图片blob生成成功，大小:', blob.size);
         const item = new ClipboardItem({ 'image/png': blob });
         navigator.clipboard.write([item]).then(() => {
-          alert('图片已复制到剪贴板！');
+          this.showSuccessState(exportBtn, btnText);
         }).catch(err => {
           console.error('复制失败:', err);
-          alert('复制失败，请重试');
-        }).finally(() => {
-          // 恢复按钮状态
-          exportBtn.textContent = originalText;
-          exportBtn.disabled = false;
+          this.showErrorState(exportBtn, btnText);
+          this.showStatus('复制失败，请重试', 'error');
         });
       });
 
     } catch (error) {
       console.error('导出失败:', error);
-      alert('导出失败: ' + error.message);
-      // 恢复按钮状态
-      exportBtn.textContent = originalText;
-      exportBtn.disabled = false;
+      this.showErrorState(exportBtn, btnText);
+      this.showStatus('导出失败: ' + error.message, 'error');
+    }
+  }
+
+  setLoadingState(button, btnText) {
+    button.classList.add('btn-loading');
+    button.disabled = true;
+    btnText.textContent = '复制中...';
+  }
+
+  showSuccessState(button, btnText) {
+    button.classList.remove('btn-loading');
+    button.classList.add('btn-success');
+    btnText.textContent = '已复制';
+    
+    // 添加涟漪效果
+    this.createRipple(button);
+    
+    // 2秒后恢复
+    setTimeout(() => {
+      this.resetButton(button, btnText);
+    }, 2000);
+  }
+
+  showErrorState(button, btnText) {
+    button.classList.remove('btn-loading');
+    button.classList.add('btn-error');
+    btnText.textContent = '复制失败';
+    
+    // 3秒后恢复
+    setTimeout(() => {
+      this.resetButton(button, btnText);
+    }, 3000);
+  }
+
+  resetButton(button, btnText) {
+    button.classList.remove('btn-loading', 'btn-success', 'btn-error');
+    button.disabled = false;
+    btnText.textContent = '复制为图片';
+    
+    // 移除所有涟漪效果
+    document.querySelectorAll('.ripple').forEach(ripple => ripple.remove());
+  }
+
+  createRipple(button) {
+    const ripple = document.createElement('div');
+    ripple.className = 'ripple';
+    
+    // 计算涟漪起始位置（按钮中心）
+    const rect = button.getBoundingClientRect();
+    const size = 200;
+    ripple.style.width = size + 'px';
+    ripple.style.height = size + 'px';
+    ripple.style.left = (rect.width / 2 - size / 2) + 'px';
+    ripple.style.top = (rect.height / 2 - size / 2) + 'px';
+    
+    button.appendChild(ripple);
+    
+    // 动画结束后移除元素
+    setTimeout(() => {
+      if (ripple.parentNode) {
+        ripple.parentNode.removeChild(ripple);
+      }
+    }, 1000);
+  }
+
+  showStatus(message, type) {
+    const statusElement = document.querySelector('.status-message');
+    if (statusElement) {
+      statusElement.textContent = message;
+      statusElement.className = 'status-message';
+      if (type) {
+        statusElement.classList.add(type);
+      }
     }
   }
 }
