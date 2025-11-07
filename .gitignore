@@ -6,3 +6,4 @@ TESTING_GUIDE.md
 .DS_Store
 assets/.DS_Store
 components/.DS_Store
+.iflow/settings.json

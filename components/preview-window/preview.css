@@ -23,7 +23,7 @@ body {
   flex-direction: column;
 }
 
-/* 标题栏 */
+/* 文本卡片 */
 .preview-header {
   padding: 10px;
   text-align: center;
