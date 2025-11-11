@@ -42,7 +42,7 @@ class PreviewWindow {
       // 获取文本数据并替换占位符
       const textData = await this.getTextData();
       if (textData) {
-        htmlContent = this.replacePlaceholders(htmlContent, textData);
+        htmlContent = await this.replacePlaceholders(htmlContent, textData);
         console.log('占位符替换完成');
       }
       
@@ -66,7 +66,7 @@ class PreviewWindow {
       // 获取文本数据并替换占位符
       const textData = await this.getTextData();
       if (textData) {
-        htmlContent = this.replacePlaceholders(htmlContent, textData);
+        htmlContent = await this.replacePlaceholders(htmlContent, textData);
         console.log('占位符替换完成，处理后HTML长度:', htmlContent.length);
       }
 
@@ -243,7 +243,7 @@ class PreviewWindow {
     });
   }
 
-  replacePlaceholders(template, data) {
+  async replacePlaceholders(template, data) {
     // 替换模板中的占位符
     let result = template;
     
@@ -259,7 +259,54 @@ class PreviewWindow {
     // 替换 {{url}} 占位符
     result = result.replace(/{{url}}/g, data.url || '');
     
+    // 生成二维码并替换 {{qr_code}} 占位符
+    if (data.url) {
+      const qrCodeDataUrl = await this.generateQRCode(data.url);
+      result = result.replace(/{{qr_code}}/g, qrCodeDataUrl);
+    } else {
+      // 如果没有URL，使用空字符串
+      result = result.replace(/{{qr_code}}/g, '');
+    }
+    
     return result;
+  }
+
+  async generateQRCode(url) {
+    return new Promise((resolve) => {
+      // 创建临时div用于生成二维码
+      const tempDiv = document.createElement('div');
+      tempDiv.style.position = 'absolute';
+      tempDiv.style.left = '-9999px';
+      tempDiv.style.width = '50px';
+      tempDiv.style.height = '50px';
+      document.body.appendChild(tempDiv);
+
+      // 生成二维码
+      const qr = new QRCode(tempDiv, {
+        text: url,
+        width: 50,
+        height: 50,
+        colorDark: '#000000',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H
+      });
+
+      // 等待二维码生成完成
+      setTimeout(() => {
+        // 获取二维码图片
+        const qrImage = tempDiv.querySelector('img');
+        if (qrImage && qrImage.src) {
+          resolve(qrImage.src);
+        } else {
+          // 如果图片生成失败，返回空字符串
+          console.warn('二维码生成失败');
+          resolve('');
+        }
+        
+        // 清理临时元素
+        document.body.removeChild(tempDiv);
+      }, 300);
+    });
   }
 
   async measureTemplateSize(htmlContent) {
