@@ -27,15 +27,17 @@ class Text2SocialContent {
       // 文字选择完成，获取页面标题和URL并发送数据
       const pageTitle = document.title || '无标题';
       const pageUrl = window.location.href || '';
+      const truncatedUrl = this.truncateAtThirdSlash(pageUrl);
       console.log('选中的文字:', this.selectedText);
       console.log('页面标题:', pageTitle);
-      console.log('页面URL:', pageUrl);
+      console.log('原始页面URL:', pageUrl);
+      console.log('截断后URL:', truncatedUrl);
       
       // 发送数据到background script
       this.sendDataToBackground({
         text: this.selectedText,
         title: pageTitle,
-        url: pageUrl
+        url: truncatedUrl
       });
     }
   }
@@ -43,6 +45,20 @@ class Text2SocialContent {
   getSelectedText() {
     // 获取当前选择的文字，保留原有格式包括换行符
     return window.getSelection().toString();
+  }
+
+  truncateAtThirdSlash(url) {
+    // 从URL开头数到第三个"/"并截断
+    let slashCount = 0;
+    for (let i = 0; i < url.length; i++) {
+      if (url[i] === '/') {
+        slashCount++;
+        if (slashCount === 3) {
+          return url.substring(0, i + 1);
+        }
+      }
+    }
+    return url; // 如果没有第三个"/"，返回原始URL
   }
 
   sendDataToBackground(data) {
