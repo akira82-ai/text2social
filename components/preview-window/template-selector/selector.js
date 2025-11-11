@@ -7,9 +7,9 @@ class TemplateSelector {
     this.init();
   }
 
-  init() {
+  async init() {
     console.log('初始化模板选择器...');
-    this.loadTemplates();
+    await this.loadTemplates();
     console.log('已加载模板数量:', this.templates.length);
     this.render();
     this.bindEvents();
@@ -22,10 +22,42 @@ class TemplateSelector {
     }
   }
 
-  loadTemplates() {
-    // 直接使用预定义的模板列表
-    this.templates = this.getDefaultTemplates();
-    console.log(`已加载 ${this.templates.length} 个模板`);
+  async loadTemplates() {
+    try {
+      // 尝试从templates.txt文件加载模板列表
+      const response = await fetch('../../../templates.txt');
+      if (!response.ok) {
+        throw new Error('无法加载模板配置文件');
+      }
+      
+      const text = await response.text();
+      const templateFiles = text.split('\n')
+        .map(line => line.trim())
+        .filter(line => line.endsWith('.html'));
+      
+      if (templateFiles.length === 0) {
+        throw new Error('模板配置文件为空');
+      }
+      
+      // 根据文件列表生成模板对象
+      const basePath = Text2SocialConstants.TEMPLATE_RELATIVE_PATH;
+      this.templates = templateFiles.map((fileName, index) => {
+        const name = fileName.replace('.html', '');
+        return {
+          id: `template${index + 1}`,
+          name: name,
+          color: this.getTemplateColor(index),
+          path: basePath + fileName
+        };
+      });
+      
+      console.log(`从配置文件加载了 ${this.templates.length} 个模板`);
+    } catch (error) {
+      console.error('从配置文件加载模板失败:', error);
+      // 如果加载失败，使用默认模板列表
+      this.templates = this.getDefaultTemplates();
+      console.log(`使用默认模板列表，共 ${this.templates.length} 个模板`);
+    }
   }
 
   getTemplateColor(index) {
