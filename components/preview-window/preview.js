@@ -256,6 +256,9 @@ class PreviewWindow {
     const formattedText = textContent.replace(/\n/g, '<br>');
     result = result.replace(/{{text}}/g, formattedText);
     
+    // 替换 {{url}} 占位符
+    result = result.replace(/{{url}}/g, data.url || '');
+    
     return result;
   }
 

@@ -5,7 +5,8 @@ class Text2SocialBackground {
   constructor() {
     this.textData = {
       text: '',
-      title: ''
+      title: '',
+      url: ''
     };
     this.init();
   }

@@ -24,15 +24,18 @@ class Text2SocialContent {
     this.selectedText = this.getSelectedText();
     
     if (this.selectedText) {
-      // 文字选择完成，获取页面标题并发送数据
+      // 文字选择完成，获取页面标题和URL并发送数据
       const pageTitle = document.title || '无标题';
+      const pageUrl = window.location.href || '';
       console.log('选中的文字:', this.selectedText);
       console.log('页面标题:', pageTitle);
+      console.log('页面URL:', pageUrl);
       
       // 发送数据到background script
       this.sendDataToBackground({
         text: this.selectedText,
-        title: pageTitle
+        title: pageTitle,
+        url: pageUrl
       });
     }
   }
