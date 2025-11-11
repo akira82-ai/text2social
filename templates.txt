@@ -7,3 +7,5 @@
 深色模式.html
 艺术留白.html
 标签分类 2.html
+复古终端 2.html
+深色模式 2.html

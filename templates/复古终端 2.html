@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复古终端</title>
+    <style>
+        :root {
+            --color-primary: #333;
+            --color-secondary: #666;
+            --color-background: #f4f4f9;
+            --color-card-bg: #ffffff;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            line-height: 1.8;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--color-card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-medium);
+            box-sizing: border-box;
+        }
+
+        /* ====================================================================
+         * 卡片设计 7: 复古终端 (Retro Terminal)
+         * 特点: 科技感，等宽字体，模拟命令行
+         * ====================================================================
+         */
+        .card-terminal {
+            background-color: #000000;
+            color: #00ff00;
+            font-family: 'Monospace', 'Courier New', monospace;
+            border-radius: 4px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            line-height: 1.4;
+            padding: 0; /* 移除默认 padding，由内部元素控制 */
+        }
+
+        .card-terminal .card-body {
+            padding: 30px; /* 恢复内容区域的内边距 */
+        }
+
+        .card-terminal .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #00ff00;
+            padding-bottom: 5px;
+        }
+
+        .card-terminal .card-content {
+            font-size: 16px;
+            white-space: pre-wrap;
+            margin-bottom: 20px; /* 增加底部间距 */
+        }
+
+        /* 新增底部样式 */
+        .card-terminal .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            border-top: 1px dashed #00ff00; /* 终端风格的虚线分隔 */
+            background-color: rgba(0, 0, 0, 0.8); /* 保持黑色背景 */
+            font-size: 12px;
+            color: #00ff00;
+        }
+
+        .card-terminal .footer-url {
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+
+        .card-terminal .footer-qr-code {
+            width: 50px; /* 二维码尺寸 */
+            height: 50px;
+            background-color: #00ff00; /* 二维码背景色使用主题色 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            border-radius: 2px;
+            padding: 2px; /* 增加一点内边距 */
+        }
+
+        .card-terminal .footer-qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* 模拟终端屏幕的扫描线效果 */
+            filter: contrast(1.5) brightness(1.2); 
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 卡片 7: 复古终端 -->
+    <div class="card-container card-terminal">
+        <div class="card-body">
+            <div class="card-title">
+                > {{title}}
+            </div>
+            <div class="card-content">
+{{text}}
+            </div>
+        </div>
+        <!-- 新增底部区域 -->
+        <div class="card-footer">
+            <div class="footer-url">
+                {{url}}
+            </div>
+            <div class="footer-qr-code">
+                <img src="{{qr_code}}" alt="QR Code">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

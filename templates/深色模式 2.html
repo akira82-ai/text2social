@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深色模式</title>
+    <style>
+        :root {
+            --color-primary: #333;
+            --color-secondary: #666;
+            --color-background: #f4f4f9;
+            --color-card-bg: #ffffff;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Microsoft YaHei", "PingFang SC", sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-primary);
+            line-height: 1.8;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            background-color: var(--color-card-bg);
+            border-radius: 16px;
+            box-shadow: var(--shadow-medium);
+            box-sizing: border-box;
+        }
+
+        /* ====================================================================
+         * 卡片设计 5: 深色模式 (Dark Mode)
+         * 特点: 深色背景，高对比度，现代感
+         * ====================================================================
+         */
+        .card-dark {
+            background-color: #1e272e;
+            color: #ecf0f1;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding-bottom: 15px; /* 调整底部内边距 */
+        }
+
+        .card-dark .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4a90e2; /* 蓝色高亮标题 */
+            margin-bottom: 15px;
+            border-bottom: 1px solid #34495e;
+            padding-bottom: 10px;
+        }
+
+        .card-dark .card-content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #bdc3c7;
+            margin-bottom: 20px; /* 增加底部间距 */
+        }
+
+        /* 新增底部样式 */
+        .card-dark .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0 0 0; /* 保持左右内边距为0，使用卡片本身的内边距 */
+            border-top: 1px solid #34495e; /* 沿用标题分隔线的风格 */
+            font-size: 12px;
+            color: #7f8c8d; /* 柔和的深色模式灰色 */
+        }
+
+        .card-dark .footer-url {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .card-dark .footer-qr-code {
+            width: 45px; /* 适中的二维码尺寸 */
+            height: 45px;
+            background-color: #2c3e50; /* 比背景稍亮的深色 */
+            border: 1px solid #34495e;
+            border-radius: 4px;
+            padding: 2px;
+        }
+
+        .card-dark .footer-qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 卡片 5: 深色模式 -->
+    <div class="card-container card-dark">
+        <div class="card-title">
+            {{title}}
+        </div>
+        <div class="card-content">
+            {{text}}
+        </div>
+        <!-- 新增底部区域 -->
+        <div class="card-footer">
+            <div class="footer-url">
+                {{url}}
+            </div>
+            <div class="footer-qr-code">
+                <img src="{{qr_code}}" alt="QR Code">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
