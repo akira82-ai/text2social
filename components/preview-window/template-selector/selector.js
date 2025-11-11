@@ -7,9 +7,9 @@ class TemplateSelector {
     this.init();
   }
 
-  async init() {
+  init() {
     console.log('初始化模板选择器...');
-    await this.loadTemplates();
+    this.loadTemplates();
     console.log('已加载模板数量:', this.templates.length);
     this.render();
     this.bindEvents();
@@ -22,54 +22,10 @@ class TemplateSelector {
     }
   }
 
-  async loadTemplates() {
-    try {
-      // 动态扫描templates目录下的所有HTML文件
-      const basePath = Text2SocialConstants.TEMPLATE_RELATIVE_PATH;
-      const existingTemplates = await this.scanTemplateDirectory(basePath);
-      
-      this.templates = existingTemplates.map((file, index) => ({
-        id: `template${index + 1}`,
-        name: file.name.replace('.html', ''),
-        color: this.getTemplateColor(index),
-        path: file.path
-      }));
-      
-      console.log(`实际找到 ${this.templates.length} 个模板文件`);
-    } catch (error) {
-      console.error('加载模板失败:', error);
-      // 如果动态扫描失败，使用默认模板作为备用
-      this.templates = this.getDefaultTemplates();
-    }
-  }
-
-  async scanTemplateDirectory(basePath) {
-    // 模板文件列表（8个中文命名的模板，包括所有实际存在的文件）
-    const knownTemplates = [
-      { name: '标签分类.html', path: basePath + '标签分类.html' },
-      { name: '复古终端.html', path: basePath + '复古终端.html' },
-      { name: '极简主义.html', path: basePath + '极简主义.html' },
-      { name: '渐变高亮.html', path: basePath + '渐变高亮.html' },
-      { name: '文章摘录.html', path: basePath + '文章摘录.html' },
-      { name: '社交媒体.html', path: basePath + '社交媒体.html' },
-      { name: '深色模式.html', path: basePath + '深色模式.html' },
-      { name: '艺术留白.html', path: basePath + '艺术留白.html' }
-    ];
-
-    // 尝试检查每个模板文件是否存在
-    const existingTemplates = [];
-    for (const template of knownTemplates) {
-      try {
-        const response = await fetch(template.path, { method: 'HEAD' });
-        if (response.ok) {
-          existingTemplates.push(template);
-        }
-      } catch (error) {
-        console.warn(`模板文件不存在: ${template.path}`);
-      }
-    }
-
-    return existingTemplates;
+  loadTemplates() {
+    // 直接使用预定义的模板列表
+    this.templates = this.getDefaultTemplates();
+    console.log(`已加载 ${this.templates.length} 个模板`);
   }
 
   getTemplateColor(index) {
