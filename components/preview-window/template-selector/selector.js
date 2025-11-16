@@ -8,9 +8,11 @@ class TemplateSelector {
   }
 
   async init() {
-    console.log('初始化模板选择器...');
+    const initMessage = window.text2socialI18n ? window.text2socialI18n.t('initializing_selector') : '初始化模板选择器...';
+    console.log(initMessage);
     await this.loadTemplates();
-    console.log('已加载模板数量:', this.templates.length);
+    const loadedMessage = window.text2socialI18n ? window.text2socialI18n.t('templates_loaded') : '已加载模板数量:';
+    console.log(loadedMessage, this.templates.length);
     this.render();
     this.bindEvents();
     
@@ -18,7 +20,8 @@ class TemplateSelector {
     if (this.templates.length > 0) {
       this.selectTemplate(this.templates[0].id);
     } else {
-      console.warn('没有找到可用的模板');
+      const noTemplatesMessage = window.text2socialI18n ? window.text2socialI18n.t('no_templates_found') : '没有找到可用的模板';
+      console.warn(noTemplatesMessage);
     }
   }
 

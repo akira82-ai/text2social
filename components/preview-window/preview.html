@@ -11,7 +11,7 @@
     <!-- 标题栏 -->
     <div class="preview-header">
       <!-- 文本卡片 -->
-    <h2>文本卡片</h2>
+    <h2 data-i18n="title">文本卡片</h2>
     </div>
     
     <!-- 模板选择区域 -->
@@ -26,14 +26,14 @@
     <!-- 预览区域 -->
     <div class="preview-content">
       <div class="preview-placeholder">
-        <div class="placeholder-text">预览区域</div>
+        <div class="placeholder-text" data-i18n="preview_area">预览区域</div>
       </div>
     </div>
     
     <!-- 操作按钮 -->
     <div class="preview-actions">
       <button id="text2social-export-btn" class="export-btn">
-        <span class="btn-text">复制为图片</span>
+        <span class="btn-text" data-i18n="copy_button">复制为图片</span>
         <div class="spinner"></div>
         <svg class="checkmark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle class="checkmark-circle" cx="12" cy="12" r="10"></circle>
@@ -47,6 +47,16 @@
       </button>
     </div>
     
+    <!-- 语言切换 -->
+    <div class="language-selector">
+      <span data-i18n="language">语言</span>
+      <select id="language-select">
+        <option value="zh-CN" data-i18n="chinese">中文</option>
+        <option value="en-US" data-i18n="english">English</option>
+        <option value="ja-JP" data-i18n="japanese">日本語</option>
+      </select>
+    </div>
+    
     <!-- 状态消息 -->
     <div class="status-message"></div>
   </div>
@@ -54,6 +64,7 @@
   <script src="../../lib/qrcode.min.js"></script>
   <script src="../../lib/html2canvas.min.js"></script>
   <script src="../utils/constants.js"></script>
+  <script src="../utils/i18n.js"></script>
   <script src="template-selector/selector.js"></script>
   <script src="preview.js"></script>
 </body>

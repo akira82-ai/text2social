@@ -1,0 +1,61 @@
+# Text2Social 国际化语言资源文件
+# 格式: 语言代码.键名=翻译文本
+
+# 中文资源
+zh-CN.title=文本卡片
+zh-CN.copy_button=复制为图片
+zh-CN.copying=复制中...
+zh-CN.copied=已复制
+zh-CN.copy_failed=复制失败
+zh-CN.generating=生成中...
+zh-CN.preview_area=预览区域
+zh-CN.retry_message=复制失败，请重试
+zh-CN.template_load_failed=模板加载失败
+zh-CN.render_failed=渲染失败
+zh-CN.export_failed=导出失败
+zh-CN.language=语言
+zh-CN.chinese=中文
+zh-CN.english=English
+zh-CN.initializing_selector=初始化模板选择器...
+zh-CN.templates_loaded=已加载模板数量:
+zh-CN.no_templates_found=没有找到可用的模板
+
+# 英文资源
+en-US.title=Text Card
+en-US.copy_button=Copy as Image
+en-US.copying=Copying...
+en-US.copied=Copied
+en-US.copy_failed=Copy Failed
+en-US.generating=Generating...
+en-US.preview_area=Preview Area
+en-US.retry_message=Copy failed, please try again
+en-US.template_load_failed=Template load failed
+en-US.render_failed=Render failed
+en-US.export_failed=Export failed
+en-US.language=Language
+en-US.chinese=中文
+en-US.english=English
+en-US.japanese=日本語
+en-US.initializing_selector=Initializing template selector...
+en-US.templates_loaded=Templates loaded:
+en-US.no_templates_found=No templates found
+
+# 日语资源
+ja-JP.title=テキストカード
+ja-JP.copy_button=画像としてコピー
+ja-JP.copying=コピー中...
+ja-JP.copied=コピー完了
+ja-JP.copy_failed=コピー失敗
+ja-JP.generating=生成中...
+ja-JP.preview_area=プレビュー領域
+ja-JP.retry_message=コピー失敗、もう一度お試しください
+ja-JP.template_load_failed=テンプレート読み込み失敗
+ja-JP.render_failed=レンダリング失敗
+ja-JP.export_failed=エクスポート失敗
+ja-JP.language=言語
+ja-JP.chinese=中国語
+ja-JP.english=English
+ja-JP.japanese=日本語
+ja-JP.initializing_selector=テンプレートセレクターを初期化中...
+ja-JP.templates_loaded=テンプレート読み込み完了:
+ja-JP.no_templates_found=テンプレートが見つかりません

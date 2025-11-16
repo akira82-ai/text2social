@@ -9,6 +9,7 @@ class PreviewWindow {
   init() {
     this.loadTemplateSelector();
     this.bindEvents();
+    this.bindLanguageSelector();
   }
 
   loadTemplateSelector() {
@@ -145,6 +146,7 @@ class PreviewWindow {
   }
 
   showLoadingState(previewContent) {
+    const generatingText = window.text2socialI18n ? window.text2socialI18n.t('generating') : '生成中...';
     previewContent.innerHTML = `
       <div class="loading-state" style="
         display: flex;
@@ -165,7 +167,7 @@ class PreviewWindow {
             animation: spin 1s linear infinite;
             margin: 0 auto 16px;
           "></div>
-          生成中...
+          ${generatingText}
         </div>
       </div>
       <style>
@@ -207,6 +209,7 @@ class PreviewWindow {
     const previewContent = document.querySelector('.preview-content');
     if (!previewContent) return;
 
+    const errorMessage = window.text2socialI18n ? window.text2socialI18n.t(message) : message;
     previewContent.innerHTML = `
       <div class="error-message" style="
         display: flex;
@@ -218,7 +221,7 @@ class PreviewWindow {
         border: 1px solid #E0E0E0;
         border-radius: 4px;
       ">
-        ${message}
+        ${errorMessage}
       </div>
     `;
   }
@@ -453,13 +456,15 @@ class PreviewWindow {
   setLoadingState(button, btnText) {
     button.classList.add('btn-loading');
     button.disabled = true;
-    btnText.textContent = '复制中...';
+    const copyingText = window.text2socialI18n ? window.text2socialI18n.t('copying') : '复制中...';
+    btnText.textContent = copyingText;
   }
 
   showSuccessState(button, btnText) {
     button.classList.remove('btn-loading');
     button.classList.add('btn-success');
-    btnText.textContent = '已复制';
+    const copiedText = window.text2socialI18n ? window.text2socialI18n.t('copied') : '已复制';
+    btnText.textContent = copiedText;
     
     // 添加涟漪效果
     this.createRipple(button);
@@ -473,7 +478,8 @@ class PreviewWindow {
   showErrorState(button, btnText) {
     button.classList.remove('btn-loading');
     button.classList.add('btn-error');
-    btnText.textContent = '复制失败';
+    const copyFailedText = window.text2socialI18n ? window.text2socialI18n.t('copy_failed') : '复制失败';
+    btnText.textContent = copyFailedText;
     
     // 3秒后恢复
     setTimeout(() => {
@@ -484,7 +490,8 @@ class PreviewWindow {
   resetButton(button, btnText) {
     button.classList.remove('btn-loading', 'btn-success', 'btn-error');
     button.disabled = false;
-    btnText.textContent = '复制为图片';
+    const copyButtonText = window.text2socialI18n ? window.text2socialI18n.t('copy_button') : '复制为图片';
+    btnText.textContent = copyButtonText;
     
     // 移除所有涟漪效果
     document.querySelectorAll('.ripple').forEach(ripple => ripple.remove());
@@ -515,11 +522,25 @@ class PreviewWindow {
   showStatus(message, type) {
     const statusElement = document.querySelector('.status-message');
     if (statusElement) {
-      statusElement.textContent = message;
+      const translatedMessage = window.text2socialI18n ? window.text2socialI18n.t(message) : message;
+      statusElement.textContent = translatedMessage;
       statusElement.className = 'status-message';
       if (type) {
         statusElement.classList.add(type);
       }
+    }
+  }
+
+  bindLanguageSelector() {
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+      // 设置当前语言
+      languageSelect.value = window.text2socialI18n.getCurrentLanguage();
+      
+      // 监听语言切换
+      languageSelect.addEventListener('change', (e) => {
+        window.text2socialI18n.setLanguage(e.target.value);
+      });
     }
   }
 }
